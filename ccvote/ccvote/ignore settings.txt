@@ -1,0 +1,5 @@
+So, once a file's already in a repo, you can't ".gitignore" it.  But, you can apparently "assume-unchanged" a file to tell it not to push your changes to the main server.
+
+From: http://stackoverflow.com/questions/7070659/git-exclude-ignore-files-from-commit
+
+"git update-index --assume-unchanged ccvote/ccvote/settings.py"
