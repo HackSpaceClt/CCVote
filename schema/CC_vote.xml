@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Db flnm="CC_vote" nm="nrtb" ver="1.3.4">
+  <VerLbl/>
+  <VerNotes/>
+  <DefTblOpts/>
+  <DocFolder>/home/rstovall/development/HSC_CC_voting/schema/docs</DocFolder>
+  <Sch Cm="" nm="schemaA">
+    <Tbl UsSo="1" nm="groupData">
+      <Cm>User permission groups</Cm>
+      <TblOpts>ENGINE=InnoDB DEFAULT CHARSET=latin1</TblOpts>
+      <Pk ClNs="groupID" nm="pkgroupData"/>
+      <Cl au="1" df="" nm="groupID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>Unique group ID number</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="groupMotionMaint" nu="0">
+        <DT ds="TinyInt" en="" id="-6" ln="null" sc="null" sg="1"/>
+        <Cm>Allowed to maintain motions</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="groupRunReports" nu="0">
+        <DT ds="TinyInt" en="" id="-6" ln="null" sc="null" sg="1"/>
+        <Cm>Allowed to run reporting</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="groupVoter" nu="0">
+        <DT ds="TinyInt" en="" id="-6" ln="null" sc="null" sg="1"/>
+        <Cm>Allowed to cast votes</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="groupAdmin" nu="0">
+        <DT ds="TinyInt" en="" id="-6" ln="null" sc="null" sg="1"/>
+        <Cm>Allowed to perform admin functions</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="groupName" nu="0">
+        <DT ds="Text" en="" id="703" ln="null" sc="null" sg="1"/>
+        <Cm>Group name</Cm>
+      </Cl>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="logData">
+      <Cm>insert only historical log.</Cm>
+      <TblOpts>ENGINE=InnoDB DEFAULT CHARSET=latin1</TblOpts>
+      <Pk ClNs="logID" nm="pklogData"/>
+      <Cl au="1" df="" nm="logID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>Allows precise sequencing</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>The user taking the action</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="logAction" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="20" sc="null" sg="1"/>
+        <Cm>The type action</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="details" nu="0">
+        <DT ds="Text" en="" id="703" ln="null" sc="null" sg="1"/>
+        <Cm>More information</Cm>
+      </Cl>
+      <Fk deAc="3" nm="fk_logData_userData" prLkCl="userID" upAc="3">
+        <PrTb mn="0" nm="userData" oe="1" sch="schemaA" zr="0"/>
+        <CdTb mn="1" nm="logData" oe="1" sch="schemaA" zr="1"/>
+        <ClPr cdCl="userID" prCl="userID"/>
+      </Fk>
+      <Idx clu="0" nm="fk_logData_userData" unq="0">
+        <ClNs>userID</ClNs>
+      </Idx>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="motionData">
+      <Cm>Motion specific data</Cm>
+      <TblOpts>ENGINE=InnoDB DEFAULT CHARSET=latin1</TblOpts>
+      <Pk ClNs="motionID" nm="pkmotionData"/>
+      <Cl au="1" df="" nm="motionID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>Unique motion id</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionCreateTime" nu="0">
+        <DT ds="DateTime" en="" id="700" ln="null" sc="null" sg="1"/>
+        <Cm>when the motion was created</Cm>
+      </Cl>
+      <Cl au="0" df="0" nm="motionParent" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>parent motion (used for recalls)</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionVoteStart" nu="0">
+        <DT ds="DateTime" en="" id="700" ln="null" sc="null" sg="1"/>
+        <Cm>Voting windows open time</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionVoteEnd" nu="0">
+        <DT ds="DateTime" en="" id="700" ln="null" sc="null" sg="1"/>
+        <Cm>Voting window close time</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionClerkID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>Clerk who created the motion</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionDescription" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="50" sc="null" sg="1"/>
+        <Cm>Short name or title</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionComment" nu="0">
+        <DT ds="Text" en="" id="703" ln="null" sc="null" sg="1"/>
+        <Cm>Extended comments or notes</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionStatus" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="10" sc="null" sg="1"/>
+        <Cm>new open closed withdrawn canceled</Cm>
+      </Cl>
+      <Fk deAc="3" nm="fk_motionData_userData" prLkCl="userID" upAc="3">
+        <PrTb mn="0" nm="userData" oe="1" sch="schemaA" zr="0"/>
+        <CdTb mn="1" nm="motionData" oe="1" sch="schemaA" zr="1"/>
+        <ClPr cdCl="motionClerkID" prCl="userID"/>
+      </Fk>
+      <Idx clu="0" nm="fk_motionData_userData" unq="0">
+        <ClNs>motionClerkID</ClNs>
+      </Idx>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="userData">
+      <Cm>User specific data</Cm>
+      <TblOpts>ENGINE=InnoDB DEFAULT CHARSET=latin1</TblOpts>
+      <Pk ClNs="userID" nm="pkuserData"/>
+      <Cl au="1" df="" nm="userID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>User unique ID.</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userName" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="20" sc="null" sg="1"/>
+        <Cm>User Full name.</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userFullName" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="120" sc="null" sg="1"/>
+        <Cm>User full name</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userPwHash" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="80" sc="null" sg="1"/>
+        <Cm>Password hash</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userStatus" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="10" sc="null" sg="1"/>
+        <Cm>locked, logged_out, or logged_in</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userLastLogin" nu="0">
+        <DT ds="DateTime" en="" id="700" ln="null" sc="null" sg="1"/>
+        <Cm>Date of last login</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userLastHost" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="14" sc="null" sg="1"/>
+        <Cm>IP of last login</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="groupID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>Group the user belongs to.</Cm>
+      </Cl>
+      <Fk deAc="3" nm="fk_users_groupData" prLkCl="groupID" upAc="3">
+        <PrTb mn="0" nm="groupData" oe="1" sch="schemaA" zr="0"/>
+        <CdTb mn="1" nm="userData" oe="1" sch="schemaA" zr="1"/>
+        <ClPr cdCl="groupID" prCl="groupID"/>
+      </Fk>
+      <Idx clu="0" nm="fk_users_groupData" unq="0">
+        <ClNs>groupID</ClNs>
+      </Idx>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="voteData">
+      <Cm>Voting record</Cm>
+      <TblOpts>ENGINE=InnoDB DEFAULT CHARSET=latin1</TblOpts>
+      <Pk ClNs="voteID" nm="pkvoteData"/>
+      <Cl au="1" df="" nm="voteID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>Unique vote id and sequence</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="motionID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>motion this vote is on</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="userID" nu="0">
+        <DT ds="BigInt" en="" id="-5" ln="null" sc="null" sg="0"/>
+        <Cm>user casting the vote</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="voteTime" nu="0">
+        <DT ds="DateTime" en="" id="700" ln="null" sc="null" sg="1"/>
+        <Cm>time the vote was cast</Cm>
+      </Cl>
+      <Cl au="0" df="" nm="vote" nu="0">
+        <DT ds="VarChar" en="" id="12" ln="10" sc="null" sg="1"/>
+        <Cm>pro con abstain</Cm>
+      </Cl>
+      <Fk deAc="3" nm="fk_voteData_motionData" prLkCl="motionID" upAc="3">
+        <PrTb mn="0" nm="motionData" oe="1" sch="schemaA" zr="0"/>
+        <CdTb mn="1" nm="voteData" oe="1" sch="schemaA" zr="1"/>
+        <ClPr cdCl="motionID" prCl="motionID"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_voteData_userData" prLkCl="userID" upAc="3">
+        <PrTb mn="0" nm="userData" oe="1" sch="schemaA" zr="0"/>
+        <CdTb mn="1" nm="voteData" oe="1" sch="schemaA" zr="1"/>
+        <ClPr cdCl="userID" prCl="userID"/>
+      </Fk>
+      <Idx clu="0" nm="fk_voteData_motionData" unq="0">
+        <ClNs>motionID</ClNs>
+      </Idx>
+      <Idx clu="0" nm="fk_voteData_userData" unq="0">
+        <ClNs>userID</ClNs>
+      </Idx>
+      <SchTrHis/>
+    </Tbl>
+  </Sch>
+  <Dgm nm="diagramA">
+    <RnCf FtSz="9" lkStgy="OffsetDirect" zm="1.0">
+      <VbCfg>
+        <Fg ky="Auto Number" vl="0"/>
+        <Fg ky="Check" vl="0"/>
+        <Fg ky="Comment" vl="0"/>
+        <Fg ky="Data Type" vl="1"/>
+        <Fg ky="Default" vl="0"/>
+        <Fg ky="ENUM Values" vl="0"/>
+        <Fg ky="Length" vl="1"/>
+        <Fg ky="Name" vl="1"/>
+        <Fg ky="Nullable" vl="0"/>
+        <Fg ky="Schema Name" vl="0"/>
+        <Fg ky="Signed" vl="0"/>
+      </VbCfg>
+    </RnCf>
+    <DiaProps>
+      <Show AllCols="1" FkCols="1" PkCols="1"/>
+    </DiaProps>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="groupData" x="50" y="50"/>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="logData" x="247" y="222"/>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="motionData" x="487" y="50"/>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="userData" x="247" y="50"/>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="voteData" x="456" y="205"/>
+    <FkGl bkCl="ff000000" nm="schemaA.logData.fk_logData_userData"/>
+    <FkGl bkCl="ff000000" nm="schemaA.motionData.fk_motionData_userData"/>
+    <FkGl bkCl="ff000000" nm="schemaA.userData.fk_users_groupData"/>
+    <FkGl bkCl="ff000000" nm="schemaA.voteData.fk_voteData_motionData"/>
+    <FkGl bkCl="ff000000" nm="schemaA.voteData.fk_voteData_userData"/>
+  </Dgm>
+  <RnmMgr NxRnmId="1"/>
+  <DbDocOptionMgr>
+    <BasicOptionMgr>
+      <Name>db.doc.option.mgr</Name>
+      <BoolOpt lbl="Diagrams" nm="doc.diagrams" on="1" spl="0"/>
+      <BoolOpt lbl="Foreign Keys" nm="doc.fks" on="1" spl="0"/>
+      <BoolOpt lbl="Indexes" nm="doc.indexes" on="1" spl="0"/>
+      <BoolOpt lbl="Overwrite CSS File" nm="doc.overwrite.css" on="1" spl="0"/>
+      <BoolOpt lbl="Procedures" nm="doc.procs" on="1" spl="0"/>
+      <BoolOpt lbl="Schemas" nm="doc.schemas" on="1" spl="0"/>
+      <BoolOpt lbl="Sequences" nm="doc.sequences" on="0" spl="1"/>
+      <BoolOpt lbl="Tables" nm="doc.tables" on="1" spl="0"/>
+      <BoolOpt lbl="Triggers" nm="doc.triggers" on="1" spl="0"/>
+      <BoolOpt lbl="Views" nm="doc.views" on="1" spl="0"/>
+    </BasicOptionMgr>
+  </DbDocOptionMgr>
+</Db>
