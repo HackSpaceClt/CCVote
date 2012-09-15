@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Db flnm="CC_vote" nm="nrtb" ver="1.3.4">
+<Db flnm="CC_vote" nm="ccvote" ver="1.3.4">
   <VerLbl/>
   <VerNotes/>
   <DefTblOpts/>
-  <DocFolder>/home/rstovall/development/HSC_CC_voting/schema/docs</DocFolder>
+  <DocFolder>/home/rstovall/development/HSC_CC_voting/CCVote/schema/docs</DocFolder>
   <Sch Cm="" nm="schemaA">
     <Tbl UsSo="1" nm="groupData">
       <Cm>User permission groups</Cm>
@@ -28,10 +28,6 @@
       <Cl au="0" df="" nm="groupAdmin" nu="0">
         <DT ds="TinyInt" en="" id="-6" ln="null" sc="null" sg="1"/>
         <Cm>Allowed to perform admin functions</Cm>
-      </Cl>
-      <Cl au="0" df="" nm="groupName" nu="0">
-        <DT ds="Text" en="" id="703" ln="null" sc="null" sg="1"/>
-        <Cm>Group name</Cm>
       </Cl>
       <SchTrHis/>
     </Tbl>
@@ -224,10 +220,10 @@
       <Show AllCols="1" FkCols="1" PkCols="1"/>
     </DiaProps>
     <TbGl bkCl="ffffffe6" sch="schemaA" tbl="groupData" x="50" y="50"/>
-    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="logData" x="247" y="222"/>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="logData" x="124" y="190"/>
     <TbGl bkCl="ffffffe6" sch="schemaA" tbl="motionData" x="487" y="50"/>
     <TbGl bkCl="ffffffe6" sch="schemaA" tbl="userData" x="247" y="50"/>
-    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="voteData" x="456" y="205"/>
+    <TbGl bkCl="ffffffe6" sch="schemaA" tbl="voteData" x="406" y="188"/>
     <FkGl bkCl="ff000000" nm="schemaA.logData.fk_logData_userData"/>
     <FkGl bkCl="ff000000" nm="schemaA.motionData.fk_motionData_userData"/>
     <FkGl bkCl="ff000000" nm="schemaA.userData.fk_users_groupData"/>
