@@ -1,8 +1,8 @@
 The database is hosted in mysql 5.1 or above.
 
-the database is named cc_vote on the web host.
+the database is named ccvote on the web host.
 
-CCC_vote.sql is a script to create the schema.
+CCC_vote.sql is a script to create the schema. Use this command "mysql ccvote < CCC_vote.sql" to populate the schema after creating the database.
 
 CC_vote.xml is a database schema file for db_wrench.
 
