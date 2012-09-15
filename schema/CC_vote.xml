@@ -3,7 +3,7 @@
   <VerLbl/>
   <VerNotes/>
   <DefTblOpts/>
-  <DocFolder>/home/rstovall/development/CC_voting</DocFolder>
+  <DocFolder>/home/rstovall/development/HSC_CC_voting/schema/docs</DocFolder>
   <Sch Cm="" nm="schemaA">
     <Tbl UsSo="1" nm="groupData">
       <Cm>User permission groups</Cm>
@@ -244,7 +244,7 @@
       <BoolOpt lbl="Overwrite CSS File" nm="doc.overwrite.css" on="1" spl="0"/>
       <BoolOpt lbl="Procedures" nm="doc.procs" on="1" spl="0"/>
       <BoolOpt lbl="Schemas" nm="doc.schemas" on="1" spl="0"/>
-      <BoolOpt lbl="Sequences" nm="doc.sequences" on="1" spl="0"/>
+      <BoolOpt lbl="Sequences" nm="doc.sequences" on="0" spl="1"/>
       <BoolOpt lbl="Tables" nm="doc.tables" on="1" spl="0"/>
       <BoolOpt lbl="Triggers" nm="doc.triggers" on="1" spl="0"/>
       <BoolOpt lbl="Views" nm="doc.views" on="1" spl="0"/>

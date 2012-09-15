@@ -1,0 +1,10 @@
+The database is hosted in mysql 5.1 or above.
+
+the database is named cc_vote on the web host.
+
+CCC_vote.sql is a script to create the schema.
+
+CC_vote.xml is a database schema file for db_wrench.
+
+The docs directory holds the current HTML formatted schema documentation.
+
