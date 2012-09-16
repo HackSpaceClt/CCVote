@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'main.views.home', name='home'),
+    url(r'^login/?$', 'main.views.login', name='login'),
     # url(r'^ccvote/', include('ccvote.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
