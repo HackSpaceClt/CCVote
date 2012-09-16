@@ -1,0 +1,26 @@
+{% extends "main/base_page.html" %}
+
+{% block navigation %}
+{% include "main/navbar-nologin.html" %}
+{% endblock %}
+{% block content %}
+  <!-- Example row of columns -->
+  <div class="row">
+    <div class="span12">
+      <div class="span4 offset4">
+        <div class="well">
+          <legend>Sign in to WebApp</legend>
+          <form method="POST" action="/login/" accept-charset="UTF-8">{% csrf_token %}
+             {% if error %}
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">×</a>{{ error }}
+            </div>      
+    	    {% endif %}
+            {{ form.as_p }}
+            <button class="btn-info btn" type="submit">Login</button>      
+          </form>    
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
