@@ -1,0 +1,15 @@
+{% extends "main/base_page.html" %}
+
+{% block navigation %}
+{% include "main/navbar-nologin.html" %}
+{% endblock %}
+{% block content %}
+  <!-- Example row of columns -->
+  <div class="row">
+    <div class="span12">
+      <pre>
+        {{debug}}
+      </pre>
+    </div>
+  </div>
+{% endblock %}
