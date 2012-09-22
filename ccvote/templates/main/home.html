@@ -3,39 +3,8 @@
 {% block content %}
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-        <h1>Hello, World! The time is:</h1>
-        <h3>{{ datetime }}</h3>
-	<p>The time above was dynamically inserted into a template variable <code>datetime</code></p>
-        <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-      </div>
-
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="span4">
-          <h2>Groups</h2>
-	  <p>I will display groups in GroupData</p>
-	  <ul>
-	    {% for group in groups %}
-	    <li>{{ group.group_name }}</li>
-            {% endfor %}
-	  </ul>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Users</h2>
-	  <p>I will display users</p>
-	  <ul>
-	    {% for user in users %}
-	    <li>{{ user.user_name }} - {{ user.user_full_name }}</li>
-            {% endfor %}
-	  </ul>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>More Information</h2>
-	  <p>If you do not have any users or groups you can add them manually via the
-	  <a href="/admin/">admin</a> utility included with this web app.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
+        <h1>City Council Voting</h1>
+        <h3>Please log in</h3>
+        <p><a href="/login" class="btn btn-primary btn-large">Login</a></p>
       </div>
 {% endblock %}

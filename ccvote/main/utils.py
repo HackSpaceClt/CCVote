@@ -1,13 +1,41 @@
+from django import forms
 from django.template import Context
 from django.template import RequestContext
 from django.template import loader
 from django.template import TemplateDoesNotExist
+from django.utils.html import escape
+from django.utils.html import conditional_escape
+from django.utils.log import getLogger
+from django.http import QueryDict
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+
+logger = getLogger('debugging')
 
 simple_response = '''<html>
 <head><title>{response_string}</title></head>
 <body><h1>{response_string}</h1><p>{details}</p></body>
 </html>'''
+
+class BoolSelect(forms.Select):
+    '''Fixed drop-down select for BOOLEAN_CHOICES'''
+
+    def render_option(self, selected_choices, option_value, option_label):
+        # Output is very much not expected.
+        # Why in the world "selected_choices" 
+        # based on the *labels*?
+        # logger.debug('What is selected: %s %s %s' % (
+        #         repr(selected_choices),
+        #         repr(option_value),
+        #         repr(option_label)))
+        option_value = option_value
+        if (unicode(option_label) in selected_choices):
+            selected_html = ' selected="selected"'
+        else:
+            selected_html = ''
+        return '<option value="%s"%s>%s</option>' % (
+            escape(option_value), selected_html,
+            conditional_escape(option_label))
 
 class ActionView:
     '''
@@ -16,31 +44,6 @@ class ActionView:
     have to define an action_<name>() method to process that data.  The
     class will take care of normalizing data sent via a GET query 
     string, a POST uri-encoded body, or even "cruft" free URL params.
-
-    ::
-
-        class MyPage(ActionView):
-
-            def prompt_form(self, form):
-                self.data['form'] = form.as_p()
-                return self.render_html('my-template.html')
-
-            def action_clear(self, args):
-                return self.default()
-
-            def action_submit(self, args):
-                form = MyForm(args)
-                if not form.is_valid():
-                    self.data['error_message'] = 'Form errors'
-                    return self.prompt_form(form)
-
-                # TODO: do login stuff
-                return HttpResponseRedirect('/')
-
-            def default(self, args):
-                form = MyForm()
-                return self.prompt_form(form)
-                
 
     The only stipulation is that you implement an action_<name>(args)
     method where args is a django QueryDict object and a variable
@@ -114,6 +117,9 @@ class ActionView:
                             content_type='text/html; charset=utf-8',
                             status=200)
 
+    def redirect(self, location):
+        return HttpResponseRedirect(location)
+
     @classmethod
     def as_view(cls):
         def aux(request, *args, **kwargs):
@@ -125,7 +131,7 @@ class ActionView:
         '''Method place-holder.  Override.'''
         return self.not_implemented()
 
-    def action(self):
+    def action(self, args):
         '''Method place-holder.  Override.'''
         return self.not_implemented()
     
@@ -138,12 +144,13 @@ class ActionView:
         # URL arguments always override other data (for now)
         #
         if request.method == 'GET':
-            if request.GET is not None:
+            if request.GET:
                 args = request.GET.copy()
                 args.update(kwargs) # we'll see how this works
                 return self._dispatch(args)
             elif kwargs:
-                args = QueryDict()
+                args = QueryDict('').copy()
+                args.update(kwargs)
                 # Fake out url regex args as form args
                 # that will then allow binding and 
                 # futher validation
@@ -152,7 +159,7 @@ class ActionView:
             else:
                 return self.default()
         elif request.method == 'POST':
-            if request.POST is not None:
+            if request.POST:
                 args = request.POST.copy()
                 args.update(kwargs) # we'll see how this works
                 return self._dispatch(args)

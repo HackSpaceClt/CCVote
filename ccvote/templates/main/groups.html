@@ -1,0 +1,60 @@
+{% extends "main/base_page.html" %}
+
+{% block content %}
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span12">
+          <div><a href="/group/new" class="btn btn-primary">New Group</a></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Actions</th>
+                <th>Name</th>
+                <th>Maintain Motions</th>
+                <th>Run Reports</th>
+                <th>Votes</th>
+                <th>Administers</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for group in groups %}
+              <tr>
+                <td>
+                  <div class="btn-group">
+                    <a href="/group/{{group.group_name}}/edit" class="btn btn-primary">Edit <i class="icon-pencil"></i></a>
+                    <a href="/group/{{group.group_name}}" class="btn">Details <i class="icon-wrench"></i></a>
+                  </div>
+                </td>
+                <td>{{ group.group_name }}</td>
+                <td>{{ group.group_motion_maint|yesno:"Yes,No" }}</td>
+                <td>{{ group.group_run_reports|yesno:"Yes,No" }}</td>
+                <td>{{ group.group_voter|yesno:"Yes,No" }}</td>
+                <td>{{ group.group_admin|yesno:"Yes,No" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          
+          <div class="pagination">
+            <span class="step-links">
+              {% if groups.has_previous %}
+                  <a href="?page={{ groups.previous_page_number }}">previous</a>
+              {% endif %}
+          
+              <span class="current">
+                  Page {{ groups.number }} of {{ groups.paginator.num_pages }}.
+              </span>
+          
+              {% if groups.has_next %}
+                  <a href="?page={{ groups.next_page_number }}">next</a>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+{% comment %} vim: set sts=2 sw=2 expandtab: {% endcomment %}
