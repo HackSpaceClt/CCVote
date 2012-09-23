@@ -1,0 +1,79 @@
+<html>
+<head>
+<title>test</title>
+
+<script LANGUAGE="JavaScript" type="text/javascript">
+
+var win_width = screen.width;
+
+var image_inactive = new Image(800,600)
+var image_active = new Image(800,600)
+var image_yea = new Image(800,600)
+var image_nay = new Image(800,600)
+var image_abstain = new Image(800,600)
+var current_state = "inactive"
+
+image_inactive.src = "3button1-small-inactive2.png"
+image_active.src = "3button1-small-active.png"
+image_yea.src = "3button1-small-yea.png"
+image_nay.src = "3button1-small-nay.png"
+image_abstain.src = "3button1-small-abstain.png"
+
+
+if (document.body && document.body.offsetWidth) {
+ win_width = document.body.offsetWidth;
+}
+
+if (document.compatMode=='CSS1Compat' &&
+    document.documentElement &&
+    document.documentElement.offsetWidth ) {
+ win_width = document.documentElement.offsetWidth;
+}
+
+if (window.innerWidth) {
+ win_width = window.innerWidth;
+}
+
+
+function update_image(sent) {
+  if (current_state == sent) {
+    document.vote_image.src = image_active.src;
+    current_state = "active";
+    return;
+    }
+  switch(sent) {
+    case "yea":
+        document.vote_image.src = image_yea.src;
+        current_state = "yea";
+        break;
+    case "nay":
+        document.vote_image.src = image_nay.src;
+        current_state = "nay";
+        break;
+    case "abstain":
+        document.vote_image.src = image_abstain.src;
+        current_state = "abstain";
+        break;
+    case "active":
+        document.vote_image.src = image_abstain.src;
+        current_state = "active";
+        break;
+    default:
+        document.vote_image.src = image_inactive.src;
+    }
+  }
+
+</script>
+</head>
+<body onLoad="update_image('active')">
+<map name="3button-map">
+<area shape="poly" coords="0,0,400,0,267,300,400,600,0,600" onClick="update_image('yea')" />
+<area shape="poly" coords="400,0,267,300,400,600,533,300" onClick="update_image('abstain')" />
+<area shape="poly" coords="400,0,533,300,400,600,800,600,800,0" onClick="update_image('nay')" />
+</map>
+<img name="vote_image" src="small-inactive.png" width=800 height=600 border=0 usemap="#3button-map" />
+<br />
+<input type=button onClick="update_image('active')" value="Click to activate" />
+<input type=button onClick="update_image('deactive')" value="Click to deactivate" />
+</body>
+</html>
