@@ -8,6 +8,7 @@ from django.core.validators import validate_slug
 from django.utils.log import getLogger
 from main.utils import ActionView
 from main.utils import BoolSelect
+from main import models
 from main.models import GroupData
 from main.models import UserData
 from main.models import USER_STATUS_CHOICES
@@ -104,6 +105,7 @@ class UserCreate(ActionView):
 
         new_user = UserData(user_name=d['user_name'],
                             user_full_name=d['user_full_name'],
+                            user_status=models.USER_STATUS_LOGGED_OUT,
                             group_id=d['group_id'])
         new_user.set_password(d['user_password'].encode('utf8'))
         # TODO: log actions in LogData

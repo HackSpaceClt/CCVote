@@ -7,10 +7,13 @@ BOOLEAN_CHOICES = (
         (0, 'False'),
 )
 
+USER_STATUS_LOCKED = 'locked'
+USER_STATUS_LOGGED_IN = 'logged_in'
+USER_STATUS_LOGGED_OUT = 'logged_out'
 USER_STATUS_CHOICES = (
-        ('locked', 'Locked'),
-        ('logged_in', 'Logged in'),
-        ('logged_out', 'Logged out'),
+        (USER_STATUS_LOCKED, 'Locked'),
+        (USER_STATUS_LOGGED_IN, 'Logged in'),
+        (USER_STATUS_LOGGED_OUT, 'Logged out'),
 )
 
 MOTION_STATUS_CHOICES = (
@@ -102,14 +105,15 @@ class UserData(models.Model):
         else:
             return False
     
-        def status_display(self):
-            sd = dict(USER_STATUS_CHOICES)
-            return sd[self.user_status]
+    def status_display(self):
+        sd = dict(USER_STATUS_CHOICES)
+        return sd[self.user_status]
     
-        class Meta:
-            db_table = u'userdata'
-        def __unicode__(self):
-            return self.user_name
+    class Meta:
+        db_table = u'userdata'
+
+    def __unicode__(self):
+        return self.user_name
 
 class LogData(models.Model):
     log_id = models.AutoField(
