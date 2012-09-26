@@ -1,3 +1,5 @@
+import os
+import hashlib
 from django.db import models
 
 BOOLEAN_CHOICES = (
@@ -68,6 +70,7 @@ class UserData(models.Model):
             'User login name', max_length=20, unique=True, db_column='userName')
     user_full_name = models.CharField(
             'User full name', max_length=120, db_column='userFullName')
+    # salt is embedded in the field: salt(16) + sha256(64)
     user_pwhash = models.CharField(
             'Password hash', max_length=80, db_column='userPwHash')
     user_status = models.CharField(
@@ -81,10 +84,32 @@ class UserData(models.Model):
     group_id = models.ForeignKey(
             GroupData, verbose_name='Group the user belongs to',
             db_column='groupID')
-    class Meta:
-        db_table = u'userdata'
-    def __unicode__(self):
-        return self.user_name
+
+    def set_password(self, password):
+        # SHA256 hash store
+        salt = os.urandom(8)
+        hash = hashlib.sha256(password + salt)
+        storage = '%s%s' % (salt.encode('hex'), hash.hexdigest())
+        self.user_pwhash = storage
+    
+    def verify_password(self, password, storage):
+        shex = self.user_pwhash[:16]
+        hash = self.user_pwhash[16:]
+        salt = shex.decode('hex')
+        test = hashlib.sha256(password + salt).hexdigest()
+        if hash == test:
+            return True
+        else:
+            return False
+    
+        def status_display(self):
+            sd = dict(USER_STATUS_CHOICES)
+            return sd[self.user_status]
+    
+        class Meta:
+            db_table = u'userdata'
+        def __unicode__(self):
+            return self.user_name
 
 class LogData(models.Model):
     log_id = models.AutoField(

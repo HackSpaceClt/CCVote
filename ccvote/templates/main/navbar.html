@@ -18,7 +18,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administrative <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="/groups">Manage Groups</a></li>
-                  <li><a href="#lol-nope">Manage Users</a></li>
+                  <li><a href="/users">Manage Users</a></li>
                   <li class="divider"></li>
                   <li><a href="#lol-nope">Manage Locations</a></li>
                   <li><a href="#lol-nope">Data Maintenance</a></li>
@@ -45,11 +45,13 @@
               <li><a href="#help">Help</a></li>
               <li><a href="#about">About</a></li>
             </ul>
+	    {% comment %}
             <form class="navbar-form pull-right" action="/login" method="POST">{% csrf_token %}
               <input class="span2" type="text" name="user_name" placeholder="Username">
               <input class="span2" type="password" name="password" placeholder="Password">
               <input type="submit" name="action_submit" class="btn" value="Sign in">
             </form>
+	    {% endcomment %}
           </div><!--/.nav-collapse -->
         </div>
       </div>

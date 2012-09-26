@@ -4,7 +4,7 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="span12">
-          <div><a href="/group/new" class="btn btn-primary">New Group</a></div>
+          <div><a href="/group/" class="btn btn-primary">New Group</a></div>
         </div>
       </div>
       <div class="row">
@@ -12,28 +12,28 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Actions</th>
                 <th>Name</th>
                 <th>Maintain Motions</th>
                 <th>Run Reports</th>
                 <th>Votes</th>
                 <th>Administers</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for group in groups %}
               <tr>
+                <td>{{ group.group_name }}</td>
+                <td>{{ group.group_motion_maint|yesno:"Yes,No" }}</td>
+                <td>{{ group.group_run_reports|yesno:"Yes,No" }}</td>
+                <td>{{ group.group_voter|yesno:"Yes,No" }}</td>
+                <td>{{ group.group_admin|yesno:"Yes,No" }}</td>
                 <td>
                   <div class="btn-group">
                     <a href="/group/{{group.group_name}}/edit" class="btn btn-primary">Edit <i class="icon-pencil"></i></a>
                     <a href="/group/{{group.group_name}}" class="btn">Details <i class="icon-wrench"></i></a>
                   </div>
                 </td>
-                <td>{{ group.group_name }}</td>
-                <td>{{ group.group_motion_maint|yesno:"Yes,No" }}</td>
-                <td>{{ group.group_run_reports|yesno:"Yes,No" }}</td>
-                <td>{{ group.group_voter|yesno:"Yes,No" }}</td>
-                <td>{{ group.group_admin|yesno:"Yes,No" }}</td>
               </tr>
               {% endfor %}
             </tbody>
