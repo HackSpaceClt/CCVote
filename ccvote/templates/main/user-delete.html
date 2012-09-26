@@ -1,0 +1,27 @@
+{% extends "main/base_page.html" %}
+
+{% block navigation %}
+{% include "main/navbar.html" %}
+{% endblock %}
+{% block content %}
+  <!-- Example row of columns -->
+  <div class="row">
+    <div class="span12">
+      <div class="well">
+        <form method="POST" action="/user/{{ usr.user_name }}/delete" accept-charset="UTF-8">{% csrf_token %}
+          {% if error_message %}
+          <div class="alert alert-error">
+              <a class="close" data-dismiss="alert" href="#">×</a>{{ error_message }}
+          </div>      
+          {% endif %}
+          <h3>Delete user {{ usr.user_name }} ({{ usr.user_full_name }})?</h3>
+
+	  <div>
+            <input type="submit" name="action_delete" class="btn btn-danger" value="Delete" />
+            <a class="btn" href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+	  </div>
+        </form>    
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -143,6 +143,7 @@ class ActionView:
         # "args" will be a QueryDict in _all_ cases.
         # URL arguments always override other data (for now)
         #
+        self.data['request'] = request
         if request.method == 'GET':
             if request.GET:
                 args = request.GET.copy()

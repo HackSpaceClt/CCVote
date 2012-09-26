@@ -1,0 +1,55 @@
+{% extends "main/base_page.html" %}
+
+{% block content %}
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span12">
+          <div><a href="/user/" class="btn btn-primary">New User</a></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.user_name }}</td>
+                <td>{{ user.user_full_name }}</td>
+                <td>
+                  <div class="btn-group">
+                    <a href="/user/{{user.user_name}}/edit" class="btn btn-primary">Edit <i class="icon-pencil"></i></a>
+                    <a href="/user/{{user.user_name}}" class="btn">Details <i class="icon-wrench"></i></a>
+                    <a href="/user/{{user.user_name}}/delete" class="btn">Delete <i class="icon-remove"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          
+          <div class="pagination">
+            <span class="step-links">
+              {% if users.has_previous %}
+                  <a href="?page={{ users.previous_page_number }}">previous</a>
+              {% endif %}
+          
+              <span class="current">
+                  Page {{ users.number }} of {{ users.paginator.num_pages }}.
+              </span>
+          
+              {% if users.has_next %}
+                  <a href="?page={{ users.next_page_number }}">next</a>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+{% comment %} vim: set sts=2 sw=2 expandtab: {% endcomment %}

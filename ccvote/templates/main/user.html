@@ -1,0 +1,30 @@
+{% extends "main/base_page.html" %}
+
+{% comment %}
+Be carefull with template variable names.  Apparently the 
+RequestContext will override some name for its own
+purposes.  Hence the use of "usr" rather than "user".
+{% endcomment %}
+{% block content %}
+      <div class="row">
+        <div class="span12">
+          <h3>User {{ usr.user_name }} ({{ usr.user_full_name }})</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <ul>
+            <li>Status: {{ usr.status_display }}</li>
+            <li>Last login: {{ usr.user_last_login|default_if_none:"Never" }}</li>
+            <li>Recently logged in from: [{{ usr.user_last_host|default_if_none:"" }}]</li>
+            <li>Group association: {{ usr.group_id }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <a href="/user/{{ usr.user_name }}/edit" class="btn btn-primary">Edit</a>
+        </div>
+      </div>
+{% endblock %}
+<!-- vim: set sts=2 sw=2 expandtab: -->
