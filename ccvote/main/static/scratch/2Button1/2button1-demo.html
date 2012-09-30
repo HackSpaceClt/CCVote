@@ -1,0 +1,244 @@
+<html>
+<head>
+<title>test</title>
+
+<script LANGUAGE="JavaScript" type="text/javascript">
+
+var win_width = screen.width;
+
+var image_inactive;
+var image_background = "url(2button1_background1.png)";
+var image_active;
+var image_active_alt;
+var image_selected_yea;
+var image_selected_nay;
+var current_state = "inactive";
+
+// For future use
+if (document.body && document.body.offsetWidth) {
+ win_width = document.body.offsetWidth;
+}
+if (document.compatMode=='CSS1Compat' &&
+    document.documentElement &&
+    document.documentElement.offsetWidth ) {
+ win_width = document.documentElement.offsetWidth;
+}
+if (window.innerWidth) {
+ win_width = window.innerWidth;
+}
+
+
+function set_variation() {
+  var variant_inactive_element = document.getElementById("variant_inactive")
+  var variant_inactive = variant_inactive_element.options[variant_inactive_element.selectedIndex].value
+  var variant_active_element = document.getElementById("variant_active")
+  var variant_active = variant_active_element.options[variant_active_element.selectedIndex].value
+  var variant_selection_element = document.getElementById("variant_selection")
+  var variant_selection = variant_selection_element.options[variant_selection_element.selectedIndex].value
+  var variant_alt_when_selected_element = document.getElementById("variant_alt_when_selected")
+  var variant_alt_when_selected = variant_alt_when_selected_element.options[variant_alt_when_selected_element.selectedIndex].value
+
+  // default
+  //image_inactive = "url(2button1_background1.png)";
+  //image_active = "url(2button1_active1.png)";
+  //image_active_alt = "url(2button1_active1.png)";
+  //image_selected_yea = "url(2button1_selected_yea1.png)";
+  //image_selected_nay = "url(2button1_selected_nay1.png)";
+
+  switch(variant_inactive) {
+    case "greyed out":
+        image_inactive = "url(2button1_background2.png)";
+        break;
+    case "only buttons greyed":
+        image_inactive = "url(2button1_background3.png)";
+        break;
+    default:
+        image_inactive = "url(2button1_background1.png)";
+    }
+  switch(variant_active) {
+    case "slightly darker":
+        image_active = "url(2button1_active2.png)";
+        break;
+    case "no color":
+        image_active = "url(2button1_background1.png)";
+        break;
+    default:
+        image_active = "url(2button1_active1.png)";
+    }
+  switch(variant_selection) {
+    case "with highlight":
+        image_selected_yea = "url(2button1_selected_yea2.png)";
+        image_selected_nay = "url(2button1_selected_nay2.png)";
+        break;
+    case "with character":
+        image_selected_yea = "url(2button1_selected_yea3.png)";
+        image_selected_nay = "url(2button1_selected_nay3.png)";
+        break;
+    default:
+        image_selected_yea = "url(2button1_selected_yea1.png)";
+        image_selected_nay = "url(2button1_selected_nay1.png)";
+    }
+  switch(variant_alt_when_selected) {
+    case "colored":
+        image_active_alt = "url(2button1_active1.png)";
+        break;
+    case "darker":
+        image_active_alt = "url(2button1_active2.png)";
+        break;
+    case "no color":
+        image_active_alt = "url(2button1_background1.png)";
+        break;
+    default:
+        image_active_alt = image_active;
+        break;
+    }
+  
+  update_state("start");
+  }
+
+function update_state(sent) {
+  var image_div = document.getElementById("vote_image_id")
+  if (sent != "start" && (current_state == "inactive" && sent != "active")) {
+    // we're in the 'inactive' state, and weren't sent an
+    // 'activate' command, so let's just ignore it...
+    // alert(sent);
+    return;
+    }
+  if (current_state == sent) {
+    // Current state is the same as what we were commanded to
+    // go to.  So, let's toggle back to the 'active' (no vote)
+    // state.
+    update_state("active");
+    return;
+    }
+  switch(sent) {
+    case "yea":
+        image_div.style.backgroundImage = image_selected_yea +", "+ image_active_alt +", "+ image_background;
+        current_state = "yea";
+        break;
+    case "nay":
+        image_div.style.backgroundImage = image_selected_nay +", "+ image_active_alt +", "+ image_background;
+        current_state = "nay";
+        break;
+    case "active":
+        image_div.style.backgroundImage = image_active +", "+ image_background;
+        current_state = "active";
+        break;
+    default:
+        // deactivate by default
+        image_div.style.backgroundImage = image_inactive;
+        current_state = "inactive";
+    }
+  // update_debug();
+  }
+function update_debug() {
+  var debug_element = document.getElementById("debug_text");
+  debug_element.innerHTML = debug_element.innerHTML + "<br />" + current_state;
+  }
+
+</script>
+<style type="text/css"> 
+.vote_image { 
+    position: relative; 
+    margin: 20px 0 20px 40px; 
+    padding: 5px 0;
+    width: 960px; 
+    height: 640px; 
+    background-repeat: no-repeat; 
+    /* border: 1px solid blue; */
+    }
+#box_yea { 
+    position: absolute; 
+    top: -1px; 
+    left: -1px; 
+    width: 480px; 
+    height: 640px; 
+    background-color: transparent; 
+    /* border: 1px solid green; */
+    }
+#box_nay { 
+    position: absolute; 
+    top: -1px; 
+    left: 479px; 
+    width: 480px; 
+    height: 640px; 
+    background-color: transparent; 
+    /* border: 1px solid red; */
+    }
+</style>
+</head>
+<body onLoad="set_variation(); update_state('start')">
+<div class="vote_image" id="vote_image_id">
+    <div id="box_yea" onClick="update_state('yea')">
+      <span />
+    </div>
+    <div id="box_nay" onClick="update_state('nay')">
+      <span />
+    </div>
+</div>
+<br />
+
+<input type=button onClick="update_state('active')" value="Click to activate" />
+<input type=button onClick="update_state('inactive')" value="Click to deactivate" />
+
+<br />
+
+Inactive style:
+<select id="variant_inactive" onChange="set_variation()">
+    <option selected="selected">darkened</option>
+    <option>greyed out</option>
+    <option>only buttons greyed</option>
+</select>
+&nbsp; Active style: 
+<select id="variant_active" onChange="set_variation()">
+    <option selected="selected">colored</option>
+    <option>slightly darker</option>
+    <option>no color</option>
+</select>
+&nbsp;
+<select id="variant_selection" onChange="set_variation()">
+    <option selected="selected">selected type 1</option>
+    <option>with highlight</option>
+    <option>with character</option>
+</select>
+&nbsp; Not selected button style: 
+<select id="variant_alt_when_selected" onChange="set_variation()">
+    <option selected="selected">current active style</option>
+    <option>colored</option>
+    <option>darker</option>
+    <option>no color</option>
+</select>
+
+<br />
+<div id=debug_text />
+
+<div class="hidden">
+	<script type="text/javascript">
+		<!--//--><![CDATA[//><!--
+// preload images
+var preload_image_array = new Array();
+function preload() {
+    for (i = 0; i < preload.arguments.length; i++) {
+        preload_image_array[i] = new Image()
+        preload_image_array[i].src = preload.arguments[i]
+        }
+    }
+preload(
+    "2button1_active1.png",
+    "2button1_active2.png",
+    "2button1_background1.png",
+    "2button1_background2.png",
+    "2button1_background3.png",
+    "2button1_selected_nay1.png",
+    "2button1_selected_nay2.png",
+    "2button1_selected_nay3.png",
+    "2button1_selected_yea1.png",
+    "2button1_selected_yea2.png",
+    "2button1_selected_yea3.png"
+    )
+		//--><!]]>
+	</script>
+</div>
+
+</body>
+</html>
