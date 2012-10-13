@@ -1,0 +1,7 @@
+option1 seems like it would be easiest to read since the names are all aligned to left side of the column (for someone who is recording votes by looking at the display). option2 is okay, but the wider background for each name will cover more of the background of the television view behind it. option3 would allow more of the background television view to be seen, but I still think is harder to read for someone quickly scanning to record votes since the names are not left-side-of-column aligned.
+
+The blue background is simulating the background needed for the overlay - I can't remember what this is called as the term that was written on the dry-erase board today is not recorded on the wiki.
+
+I am going to work on some other-colored text (like white) to see the difference. It is hard to tell what will look the best overlaid over actual video.
+
+
