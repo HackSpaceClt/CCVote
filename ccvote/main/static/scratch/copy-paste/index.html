@@ -1,0 +1,104 @@
+<html>
+<head>
+  <title>Copy/Paste Example</title>
+</head>
+<body>
+
+<h1>Example video display</h1>
+<h2>(not actually the format to be used)</h2>
+<table border=0 cellspacing=5>
+    <colgroup>
+        <col style="text-align:left" />
+        <col style="text-align:center" />
+        <col style="text-align:center" />
+    </colgroup>
+  <thead>
+    <tr>
+        <th>Councilmember</th>
+        <th>For</th>
+        <th>Against</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+        <td></td>
+        <td>7</th>
+        <td>5</th>
+    </tr>
+  </tfoot>
+    <tr>
+        <td>Michael Barnes</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>Beth Pickering</td><td></td><td>X</td>
+    </tr>
+    <tr>
+        <td>David Howard</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>LaWana Mayfield</td><td></td><td>X</td>
+    </tr>
+    <tr>
+        <td>Warren Cooksey</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>Mayor Anthony Foxx</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>Andy Dulin</td><td></td><td>X</td>
+    </tr>
+    <tr>
+        <td>Patrick Cannon</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>John Autry</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>Claire Green Fallon</td><td>X</td><td></td>
+    </tr>
+    <tr>
+        <td>James Mitchell</td><td></td><td>X</td>
+    </tr>
+    <tr>
+        <td>Patsy Kinsey</td><td></td><td>X</td>
+    </tr>
+</table>
+
+<br /><br />
+
+<h1>Example text to be copied to granicus</h1>
+<h2>(format to be determined by clerk's office)</h2>
+
+<div id="to_be_copied">
+<pre>
+For:
+    Michael Barnes, David Howard, Warren Cooksey, Mayor Anthony Foxx, Patrick Cannon, John Autry, Claire Green Fallon
+
+Against:
+    Beth Pickering, LaWana Mayfield, Andy Dulin, James Mitchell, Patsy Kinsey
+</pre>
+</div>
+
+<div id="hidden_div" style="position:fixed; top:-20%;"></div>
+
+
+<br /><br />
+
+<input type=button name=copyme onclick="copyToClipboard();" value="Click this button to copy the above to your clipboard" />
+
+<script type="text/javascript">
+function copyToClipboard() {
+var r = document.body.createTextRange();
+r.moveToElementText(document.getElementById('to_be_copied'));
+r.select();  
+r.execCommand("Copy");
+
+// deselect, so the browser doesn't leave the element visibly selected
+r.moveToElementText(document.getElementById('hidden_div'));
+r.select();
+}
+</script>
+
+
+</body>
+</html>
