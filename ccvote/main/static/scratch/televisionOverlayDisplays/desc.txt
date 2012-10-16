@@ -4,4 +4,4 @@ The blue background is simulating the background needed for the overlay - I can'
 
 I am going to work on some other-colored text (like white) to see the difference. It is hard to tell what will look the best overlaid over actual video.
 
-
+10-16-12 I have added one more option (option4) with just lettering over a screenshot of the video of one of the actual meetings. I think this approach might be the best one. I had to do a lot of extra html and css to outline the letters (absolute, relative positioning using layers with z-index) so they will show up well over the video. I am thinking maybe moving the Yes / No at the bottom closer together toward the center of the screen separated by a black vertical line using right border of the right side and left border on the right side ... but this is at least a good start I think...

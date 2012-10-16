@@ -1,0 +1,219 @@
+.outerContainer {
+  padding:0 0 0 0;
+  margin:0 0 0 0;
+  height:430px;
+  width:572px;
+  background-image:url('../images/cityCouncil2CroppedAndScaled.tiff');
+//  background-color:blue;
+}
+.namecolumn {
+  margin:0 14px 0 28px;
+  height:430px;
+  width:244px;
+  overflow:hidden;
+  float:left;
+//  text-align:center;
+}
+.rightcolumn {
+  margin: 0 28px 0 14px;
+}
+.name {
+  overflow:hidden;
+//  display:inline-block;
+//  padding:0 8px;
+  font-size:30px;
+  margin-top:22px;
+  white-space:nowrap;
+//  text-align:justify;
+//  text-justify:inter-word;
+//  text-align:center;
+/*  zoom: 1;
+  filter: alpha(opacity=90);
+  opacity: 0.9;
+*/
+  position:relative;
+  z-index:3;
+  letter-spacing:0px;
+  font-family:sans-serif;
+  font-weight:bold;
+}
+.nameOutline {
+  overflow:visible;
+  position:relative;
+  color:#99e699;
+  color:black;
+  color:black;
+  width:0;
+  height:0;
+  z-index:2;
+}
+.no1 {
+  position:absolute;
+  left:1px;
+  bottom:21px;
+}
+.no2 {
+  position:absolute;
+  left:2px;
+  bottom:21px;
+}
+
+.no3 {
+  position:absolute;
+  left:1px;
+  bottom:20px;
+}
+.no4 {
+  position:absolute;
+  left:-1px;
+  bottom:21px;
+}
+.no5 {
+  position:absolute;
+  left:-1px;
+  bottom:23px;
+}
+.no6 {
+  position:absolute;
+  left:1px;
+  bottom:23px;
+}
+
+.Y1 {
+  left:95px;
+  z-index:2;
+  bottom:21px;
+}
+.Y2 {
+  left:97px;
+  z-index:2;
+  bottom:21px;
+}
+.Y3 {
+  left:96px;
+  z-index:2;
+  bottom:20px;
+}
+.Y4 {
+  left:94px;
+  z-index:2;
+  bottom:21px;
+}
+.Y5 {
+  left:95px;
+  z-index:2;
+  bottom:23px;
+}
+.Y6 {
+  left:97px;
+  z-index:2;
+  bottom:23px;
+}
+
+.N1 {
+  left:105px;
+  bottom:21;
+  position:absolute;
+  z-index:2;
+}
+.N2 {
+  left:104px;
+  bottom:21;
+  position:absolute;
+  z-index:2;
+}
+.N3 {
+  left:103px;
+  bottom:20;
+  position:absolute;
+  z-index:2;
+}
+.N4 {
+  left:102px;
+  bottom:21;
+  position:absolute;
+  z-index:2;
+}
+.N5 {
+  left:102px;
+  bottom:23;
+  position:absolute;
+  z-index:2;
+}
+.N6 {
+  left:104px;
+  bottom:23;
+  position:absolute;
+  z-index:2;
+}
+
+/*
+.yesVote {
+  border-radius:10px;
+  background-color:darkgreen;
+//  background-image:url('darkgreen33.png');
+//  color:white;
+}
+.noVote {
+  border-radius:10px;
+  background-color:darkred;
+//  color:white;
+}
+*/
+
+.yesVote {
+  color:#00e800;
+}
+.noVote {
+  z-index:3;
+  color:#ff2020;
+}
+.legendCont {
+//  margin:0 0 30px 0;
+//  padding:0 0 30px 0;
+//  height:30px;
+//  display:inline-block;
+//  background-color:#00e800;
+//  border-radius:10px;
+  width:100%;
+  text-align:center;
+  display:inline-block;
+  margin:0px auto;
+}
+.yesLegend {
+//  margin:0 0 0 0;
+  color:#00e800;
+  text-align:center;
+  display:inline-block;
+  background-color:#00e800;
+  border-radius:10px;
+  width:100%;
+}
+.yesLegendBackground {
+  border:1px solid black;
+  background-color:#00e800;
+  border-radius:10px;
+  position:relative;
+  z-index:1;
+}
+.noLegendBackground {
+  border:1px solid black;
+  background-color:#ff2020;
+  border-radius:10px;
+  position:relative;
+  z-index:1;
+}
+.legendYesInnerText {
+  color:#00e800;
+  position:absolute;
+  z-index:3;
+  left:87px;
+  bottom:22px;
+}
+.legendNoInnerText {
+  color:#ff2020;
+  position:absolute;
+  z-index:3;
+  left:95px;
+  bottom:22px;
+}
