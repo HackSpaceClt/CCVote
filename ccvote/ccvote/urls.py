@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'main.views.home', name='home'),
     url(r'^login/?$', 'main.views.login', name='login'),
+    url(r'^videoOverlay$', 'main.views.videoOverlay', name='videoOverlay'),
     # Groups
     url(r'^groups/?$', GroupListing.as_view()),
     url(r'^group/?$', GroupCreate.as_view()),

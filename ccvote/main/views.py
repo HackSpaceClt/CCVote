@@ -19,6 +19,8 @@ def home(request):
     return render_to_response('main/home.html', page_data,
                               RequestContext(request))
 
+def videoOverlay(request):
+    return render_to_response('main/videoOverlay.html')
 
 class LoginForm(forms.Form):
     user_name = forms.CharField(label='Login', max_length=20)
