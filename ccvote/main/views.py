@@ -20,7 +20,9 @@ def home(request):
                               RequestContext(request))
 
 def videoOverlay(request):
-    return render_to_response('main/videoOverlay.html')
+    videoDisplayData['names']=VoteTemp.objects.values('user_name')
+    videoDisplayData['nameAndVote']=VoteTemp.objects.values('user_name').fil
+    return render_to_response('main/videoOverlay.html', videoDisplayData, RequestContext(request))
 
 class LoginForm(forms.Form):
     user_name = forms.CharField(label='Login', max_length=20)

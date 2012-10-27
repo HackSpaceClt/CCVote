@@ -133,7 +133,7 @@ class MotionData(models.Model):
     motion_id = models.AutoField(
             'Unique motion ID number', primary_key=True, db_column='motionID')
     motion_create_time = models.DateTimeField(
-            'Date-time the motion was created', db_column='motionCreateTime')
+            'Date-time the motion was created', db_column='motionCreateTime', auto_now_add=True)
     motion_parent = models.IntegerField(
             'Parent motion (used for recalls)', null=True,
             db_column='motionParent')
@@ -171,5 +171,12 @@ class VoteData(models.Model):
         db_table = u'votedata'
     def __unicode__(self):
         return self.vote
+
+class VoteTemp(models.Model):
+    user_id = models.OneToOneField(UserData, related_name="+", primary_key=True)
+    user_name = models.OneToOneField(UserData, related_name='+')
+    user_status = models.OneToOneField(UserData)
+    motion_id = models.ForeignKey(MotionData)
+    vote = models.CharField('pro/con/abstain', max_length=10)
 
 # vim: set sts=4 sw=4 expandtab:
