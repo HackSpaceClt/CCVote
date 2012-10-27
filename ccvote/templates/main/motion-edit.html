@@ -1,0 +1,26 @@
+{% extends "main/base_page.html" %}
+
+{% block navigation %}
+{% include "main/navbar.html" %}
+{% endblock %}
+{% block content %}
+  <!-- Example row of columns -->
+  <div class="row">
+    <div class="span12">
+      <div class="well">
+        <legend>Edit motion {{ motion_id }}</legend>
+        <form method="POST" action="/motion/{{ motion_id }}/edit" accept-charset="UTF-8">{% csrf_token %}
+          {% if error_message %}
+          <div class="alert alert-error">
+              <a class="close" data-dismiss="alert" href="#">×</a>{{ error_message }}
+          </div>      
+          {% endif %}
+          {{ form.as_p }}
+	  <div>
+            <input type="submit" name="action_save" class="btn-info btn" value="Save" />
+	  </div>
+        </form>    
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "main/base_page.html" %}
+
+{% block content %}
+Hello {{ myvar }}
+<!-- Example row of columns -->
+<div class="row">
+  <div class="span12">
+    <div><a href="/motion/" class="btn btn-primary">New Motion</a></div>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Time Created</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Clerk</th>
+          <th>Description</th>
+          <th>Comment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for motion in motions %}
+        <tr>
+          <td>{{ motion.motion_id }}</td>
+          <td>{{ motion.motion_time_created}}</td>
+          <td>{{ motion.motion_start_time }}</td>
+          <td>{{ motion.motion_end_time }}</td>
+          <td>{{ motion.motion_clerk }}</td>
+          <td>{{ motion.motion_description }}</td>
+          <td>{{ motion.motion_comment }}</td>
+          <td>{{ motion.motion_status }}</td>
+          <td>
+            <div class="btn-motion">
+              <a href="/motion/{{motion.group_name}}/edit" class="btn btn-primary">Edit <i class="icon-pencil"></i></a>
+              <a href="/group/{{motion.motion_id}}" class="btn">Details <i class="icon-wrench"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    <div class="pagination">
+      <span class="step-links">
+        {% if motions.has_previous %}
+            <a href="?page={{ motions.previous_page_number }}">previous</a>
+        {% endif %}
+    
+        <span class="current">
+            Page {{ motions.number }} of {{ motions.paginator.num_pages }}.
+        </span>
+    
+        {% if motions.has_next %}
+            <a href="?page={{ motions.next_page_number }}">next</a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "main/base_page.html" %}
+
+{% block content %}
+      <div class="row">
+        <div class="span4">
+          <h3>Members</h3>
+          {% if not members %}
+          No members.
+          {% else %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Edit</th>
+                  <th>Full Name</th>
+                  <th>Login Name</th>
+                </tr>
+              <tbody>
+              {% for member in members %}
+                <tr>
+                  <td><a href="/user/{{member.user_name}}" class="btn">Edit <i class="icon-wrench"></i></a>
+                  <td>{{member.user_full_name}}</td>
+                  <td>{{member.user_name}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+        </div>
+        {% comment %}
+        (wreel) The following is fairly verbose... don't know a more elegant way... :(
+        {% endcomment %}
+        <div class="span4">
+          <h3>{{ group.group_name }}</h3>
+          <ul>
+          {% if group.group_motion_maint %}
+            <li>Group can maintain motions</li>
+          {% else %} 
+            <li>Group cannot maintian motions</li>
+          {% endif %}
+
+          {% if group.group_run_reports %}
+            <li>Group can run reports</li>
+          {% else %} 
+            <li>Group cannot run reports</li>
+          {% endif %}
+
+          {% if group.group_voter %}
+            <li>Group can cast votes</li>
+          {% else %} 
+            <li>Group cannot cast votes</li>
+          {% endif %}
+
+          {% if group.group_admin %}
+            <li>Group can perform admin functions</li>
+          {% else %} 
+            <li>Group cannot perform admin functions</li>
+          {% endif %}
+          </ul>
+
+          <a href="/group/{{ group.group_name }}/edit" class="btn btn-primary">Edit</a>
+
+        </div>
+      </div>
+{% endblock %}
+<!-- vim: set sts=2 sw=2 expandtab: -->
