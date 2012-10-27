@@ -1,0 +1,235 @@
+.outerContainer {
+  padding:0 0 0 0;
+  margin:0 0 0 0;
+  height:430px;
+  width:572px;
+  background-color:blue;
+  background-image:url('cityCouncil2CroppedAndScaled.png');
+}
+.legendCont {
+  position:relative;
+  bottom:27px;
+  height:30px;
+  width:100%;
+  text-align:center;
+//  display:inline-block;
+  margin:0px auto;
+}
+.ynLegendCont {
+  height:0;
+  width:0;
+  margin:0 auto;
+}
+.yesLegendTextCont {
+  position:relative;
+  right:113px;
+  top:2px;
+}
+.noLegendTextCont {
+  position:relative;
+  right:121px;
+  top:2px;
+}
+.yesTotalNumber {
+  font-size:115%;
+  position:relative;
+  top:2px;
+  right:1px;
+}
+.noTotalNumber {
+  font-size:115%;
+  position:relative;
+  top:2px;
+  right:3px;
+}  
+.namecolumn {
+  margin:0 14px 0 28px;
+  height:400px;
+  width:244px;
+  overflow:hidden;
+  float:left;
+}
+.legendColumn {
+//  margin:0 14px 0 28px;
+  height:30px;
+  width:244px;
+  margin:auto;
+  float:left;
+//  overflow:hidden;
+}
+.rightcolumn {
+  margin: 0 28px 0 14px;
+}
+.name {
+  overflow:hidden;
+  font-size:30px;
+  margin-top:22px;
+  white-space:nowrap;
+  position:relative;
+  z-index:3;
+  letter-spacing:0px;
+  font-family:sans-serif;
+  font-weight:bold;
+}
+.nameOutline {
+  overflow:visible;
+  position:relative;
+  color:#99e699;
+  color:black;
+  color:black;
+  width:0;
+  height:0;
+  z-index:2;
+}
+.roundedCorners {
+  border: 1px solid #999;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  behavior: url('PIE.htc');
+}
+.no1 {
+  position:absolute;
+  left:1px;
+  bottom:21px;
+}
+.no2 {
+  position:absolute;
+  left:2px;
+  bottom:21px;
+}
+
+.no3 {
+  position:absolute;
+  left:1px;
+  bottom:20px;
+}
+.no4 {
+  position:absolute;
+  left:-1px;
+  bottom:21px;
+}
+.no5 {
+  position:absolute;
+  left:-1px;
+  bottom:23px;
+}
+.no6 {
+  position:absolute;
+  left:1px;
+  bottom:23px;
+}
+
+.Y1 {
+  left:87px;
+  z-index:2;
+  bottom:21px;
+}
+.Y2 {
+  left:89px;
+  z-index:2;
+  bottom:21px;
+}
+.Y3 {
+  left:88px;
+  z-index:2;
+  bottom:20px;
+}
+.Y4 {
+  left:86px;
+  z-index:2;
+  bottom:21px;
+}
+.Y5 {
+  left:87px;
+  z-index:2;
+  bottom:23px;
+}
+.Y6 {
+  left:89px;
+  z-index:2;
+  bottom:23px;
+}
+
+.N1 {
+  left:97px;
+  bottom:21;
+  position:absolute;
+  z-index:2;
+}
+.N2 {
+  left:96px;
+  bottom:21;
+  position:absolute;
+  z-index:2;
+}
+.N3 {
+  left:95px;
+  bottom:20;
+  position:absolute;
+  z-index:2;
+}
+.N4 {
+  left:94px;
+  bottom:21;
+  position:absolute;
+  z-index:2;
+}
+.N5 {
+  left:94px;
+  bottom:23;
+  position:absolute;
+  z-index:2;
+}
+.N6 {
+  left:96px;
+  bottom:23;
+  position:absolute;
+  z-index:2;
+}
+
+.yesVote {
+  color:#00e800;
+}
+.noVote {
+  z-index:3;
+  color:#ff2020;
+}
+.legendHalf {
+  width:50%;
+  float:left;
+}
+
+.yesLegend {
+  color:#00e800;
+  text-align:center;
+  display:inline-block;
+  background-color:#00e800;
+  width:100%;
+}
+.yesLegendBackground {
+  border:1px solid black;
+  background-color:#00e800;
+  position:relative;
+  z-index:1;
+}
+.noLegendBackground {
+  border:1px solid black;
+  background-color:#ff2020;
+  position:relative;
+  z-index:1;
+}
+.legendYesInnerText {
+  color:#00e800;
+  position:absolute;
+  z-index:3;
+  left:87px;
+  bottom:22px;
+}
+.legendNoInnerText {
+  color:#ff2020;
+  position:absolute;
+  z-index:3;
+  left:95px;
+  bottom:22px;
+}

@@ -1,0 +1,16 @@
+make sure you are in the CCvote/ccvote directory (where this file lives).
+
+if you are on linux:
+DJANGO_SETTINGS_MODULE=ccvote.settings
+export DJANGO_SETTINGS_MODULE
+
+if you are on windows:
+set DJANGO_SETTINGS_MODULE=ccvote.settings
+
+python manage.py sqlclear main > drop.sql
+mysql -u vote_db_user ccvote --password < drop.sql
+python manage.py syncdb
+
+python enterGroupUserandMotionData.py
+python anyotherscript.py (enterVoteTempData.py is not working right now - see if you can fix it please :) )
+

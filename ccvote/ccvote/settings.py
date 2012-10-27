@@ -14,7 +14,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'ccvote',                # Or path to database file if using sqlite3.
         'USER': 'vote_db_user',          # Not used with sqlite3.
-        'PASSWORD': '0WUz>6vne',         # Not used with sqlite3.
+        'PASSWORD': 'password',         # Not used with sqlite3.
         'HOST': 'localhost',             # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -103,6 +103,7 @@ ROOT_URLCONF = 'ccvote.urls'
 WSGI_APPLICATION = 'ccvote.wsgi.application'
 
 TEMPLATE_DIRS = (
+    '/Users/online/CCVote/ccvote/templates/'
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -119,6 +120,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'main',
 )
 
 # A sample logging configuration. The only tangible logging
