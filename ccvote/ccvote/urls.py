@@ -12,6 +12,7 @@ from main.userviews import UserDeleteConfirm
 from main.userviews import UserDetails
 from main.userviews import UserEdit
 from main.userviews import UserListing
+from main.motionviews import MotionsView
 
 admin.autodiscover()
 
@@ -30,6 +31,11 @@ urlpatterns = patterns('',
     url(r'^user/(?P<user_name>\w+)/?$', UserDetails.as_view()),
     url(r'^user/(?P<user_name>\w+)/edit?$', UserEdit.as_view()),
     url(r'^user/(?P<user_name>\w+)/delete?$', UserDeleteConfirm.as_view()),
+	# Motions
+	url(r'^motions/?$', MotionListing.as_view()),
+    url(r'^motions/?$', MotionCreate.as_view()),
+    url(r'^motion/(?P<motion_id>\w+)/?$', MotionDetails.as_view()),
+    url(r'^motion/(?P<motion_id>\w+)/edit/?$', MotionEdit.as_view()),
     # url(r'^ccvote/', include('ccvote.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
