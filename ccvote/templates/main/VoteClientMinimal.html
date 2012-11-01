@@ -1,0 +1,190 @@
+{% extends "main/VoteClient_base.html" %}
+
+{% block navigation %}
+<!-- Removed navigation for voter interface -->
+{% endblock %}
+
+{% block base_css %}
+<!-- Removed css for voter interface -->
+{% endblock %}
+
+{% block additional_head %}
+<style type="text/css">
+body { background-color: black; }
+.vote_image { 
+    position: relative; 
+    margin: 20px 0 20px 40px; 
+    padding: 5px 0;
+    width: 960px; 
+    height: 640px; 
+    background-repeat: no-repeat; 
+    /* border for debug */
+    /* border: 1px solid blue; */
+    }
+#box_yea { 
+    position: absolute; 
+    top: -1px; 
+    left: -1px; 
+    width: 480px; 
+    height: 640px; 
+    background-color: transparent; 
+    /* border: 1px solid green; */
+    }
+#box_nay { 
+    position: absolute; 
+    top: -1px; 
+    left: 479px; 
+    width: 480px; 
+    height: 640px; 
+    background-color: transparent; 
+    /* border: 1px solid red; */
+    }
+</style>
+
+<script src="{{ STATIC_URL }}js/jquery-1.8.1.min.js"></script>
+
+<script LANGUAGE="JavaScript" type="text/javascript">
+function addClickHandlers() {
+    $("#box_yea").click( function() { click_handler("yea") });
+    $("#box_nay").click( function() { click_handler("nay") });
+    }
+
+var image_inactive = "url({{ STATIC_URL }}img/voter_inactive.png)";
+var image_active = "url({{ STATIC_URL }}img/voter_active.png)";
+var image_yea = "url({{ STATIC_URL }}img/voter_yea.png)";
+var image_nay = "url({{ STATIC_URL }}img/voter_nay.png)";
+var current_state = "inactive";
+var jq_ajax = $.ajax({
+                {% comment %}
+                // to do -- make the 'url' a templated variable
+                // ie "{% url 'main:VoteClientAjax' %}" (namespaced)
+                // or "{% url 'VoteClientAjax' %}" (named url pattern)
+                // As it is, I'm getting a NoReverseMatch error....
+                
+                url: '{% url 'main.views.VoteClientAjax' %}',
+                {% endcomment %}
+                url: '/VoteClient/ajax',
+                dataType : 'json',
+                cache: false
+                })
+        .done( function(data) {
+            alert('Load was performed. ' + data.message);
+            })
+        .fail( function() { alert("ajax call failed"); });
+
+function click_handler(sent) {
+  if (current_state == sent) {
+	// document.vote_image.src = image_active.src;
+	// current_state = "active";
+	set_state("active");
+	return;
+	}
+  switch(sent) {
+    case "yea":
+        //document.vote_image.src = image_yea.src;
+        //current_state = "yea";
+		set_state("yea");
+        break;
+    case "nay":
+        //document.vote_image.src = image_nay.src;
+        //current_state = "nay";
+		set_state("nay");
+        break;
+    case "active":
+        //document.vote_image.src = image_abstain.src;
+        //current_state = "active";
+		set_state("active");
+        break;
+    default:
+        //document.vote_image.src = image_inactive.src;
+		set_state("inactive");
+    }
+  }
+
+function set_state(sent) {
+	// Need to:
+	//  - set the new state in the DB
+	//  - update the image & local state variable
+	//    -- dependent on success of DB update?  Or just
+	//		 re-update image on DB update success (or failure)
+    var image_div = document.getElementById("vote_image_id");
+    var new_image;
+    switch(sent) {
+      case "yea":
+        new_image = image_yea;
+        break;
+      case "nay":
+        new_image = image_nay;
+        break;
+      case "active":
+        new_image = image_active;
+        break;
+      default:
+        new_image = image_inactive;
+      }
+    current_state = sent;
+    image_div.style.backgroundImage = new_image;
+	{% comment %}
+	// proof of concept for how to re-use the data that we got from our
+	// earlier ajax call.  It does _NOT_ re-call the ajax routine.
+	jq_ajax.always( function(data) { alert('update - ' + data.message); });
+	{% endcomment %}
+	}
+
+// things to run when the document's ready...
+$(document).ready( function() {
+	// add our 'click handlers' to the div's
+    addClickHandlers();
+	
+	// if we're in the 'managed_mode', let's start in 'inactive'
+    if ( {{ managed_mode }} == 1 ) {
+        set_state("inactive");
+        }
+	// else we're in unmanged mode - let's start in the 'active' state
+    else {
+        set_state("active");
+        }
+    });
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="vote_image" id="vote_image_id">
+    <div id="box_yea">
+      <span />
+    </div>
+    <div id="box_nay">
+      <span />
+    </div>
+</div>
+
+<div style="visibility:hidden;">
+    <script LANGUAGE="JavaScript" type="text/javascript">
+
+        // lastly, let's preload images
+        var preload_image_array = new Array();
+        function preload() {
+            for (i = 0; i < preload.arguments.length; i++) {
+                preload_image_array[i] = new Image()
+                preload_image_array[i].src = preload.arguments[i]
+                }
+            }
+        preload(
+            "{{ STATIC_URL }}img/voter_inactive.png",
+            "{{ STATIC_URL }}img/voter_active.png",
+            "{{ STATIC_URL }}img/voter_yea.png",
+            "{{ STATIC_URL }}img/voter_nay.png"
+            )
+
+	</script>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<!-- Removed navigation for voter interface -->
+{% endblock %}
+
+
+{% comment %} vim: set sts=2 sw=2 expandtab: {% endcomment %}

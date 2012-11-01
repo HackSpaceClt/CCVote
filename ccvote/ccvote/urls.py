@@ -24,6 +24,16 @@ urlpatterns = patterns('',
     url(r'^$', 'main.views.home', name='home'),
     url(r'^login/?$', 'main.views.login', name='login'),
     url(r'^videoOverlay$', 'main.views.videoOverlay', name='videoOverlay'),
+
+	# Other examples for guidance:
+	
+	# url(r'^articles/(\d{4})/(\d{2})/(\d+)/$', 'news.views.article_detail')
+	## calls news.views.article_detail(request, '2003', '03', '03')
+
+	## named patterns:
+	# url(r'^articles/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/$', 'news.views.article_detail')
+	## calls news.views.article_detail(request, year='2003', month='03', day='03')
+
     # Groups
     url(r'^groups/?$', GroupListing.as_view()),
     url(r'^group/?$', GroupCreate.as_view()),
@@ -42,6 +52,10 @@ urlpatterns = patterns('',
     url(r'^motion/(?P<motion_id>\w+)/edit/?$', MotionEdit.as_view()),
     # url(r'^ccvote/', include('ccvote.foo.urls')),
 
+    # Voting client stuff
+    url(r'^VoteClient/Minimal/?$', 'main.views.VoteClientMinimal', name="VoteClientMinimal"),
+    url(r'^VoteClient/ajax/?$', 'main.views.VoteClientAjax', name="VoteClientAjax"),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

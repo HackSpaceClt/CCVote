@@ -1,9 +1,10 @@
 import logging
 import datetime
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils import simplejson
 from main.models import GroupData
 from main.models import UserData
 
@@ -28,6 +29,19 @@ class LoginForm(forms.Form):
     user_name = forms.CharField(label='Login', max_length=20)
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
+    
+# Views for vote clients
+def VoteClientMinimal(request):
+    page_data = {}
+    # 'managed_mode' should end up pulling from the DB somewhere...
+    page_data['managed_mode'] = '0'
+    return render_to_response('main/VoteClientMinimal.html', page_data, RequestContext(request))
+
+def VoteClientAjax(request):
+    response_data = {}
+    response_data['result'] = 'test success'
+    response_data['message'] = "%s %s" % ('The world has been Hello-ified as of ', str(datetime.datetime.now()))
+    return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 
 #
 # Example view demonstrating form handling
