@@ -95,7 +95,7 @@ class UserData(models.Model):
         storage = '%s%s' % (salt.encode('hex'), hash.hexdigest())
         self.user_pwhash = storage
     
-    def verify_password(self, password, storage):
+    def verify_password(self, password):
         shex = self.user_pwhash[:16]
         hash = self.user_pwhash[16:]
         salt = shex.decode('hex')

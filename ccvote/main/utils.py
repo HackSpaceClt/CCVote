@@ -9,6 +9,7 @@ from django.utils.log import getLogger
 from django.http import QueryDict
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from models import UserData
 
 logger = getLogger('debugging')
 
@@ -167,5 +168,11 @@ class ActionView:
         else:
             return self.not_implemented()
 
+class Utils:
+
+    @classmethod
+    def validate_user(cls, user_name, password):
+        user = UserData.objects.get(user_name=user_name)
+        return user.verify_password(password)
 
 # vim: set sts=4 sw=4 expandtab:

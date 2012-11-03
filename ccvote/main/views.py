@@ -8,6 +8,7 @@ from django.utils import simplejson
 from main.models import GroupData
 from main.models import UserData
 from time import sleep
+from utils import Utils
 
 #
 # Example view demonstrating template rendering and data access
@@ -65,12 +66,16 @@ def login(request):
     page_data = {}
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and Utils.validate_user(
+                        form.cleaned_data['user_name'],
+                        form.cleaned_data['password']):
             # TODO: do login stuff
             logging.info('Login attempt: %s:%s' % 
                          (form.cleaned_data['user_name'],
                           form.cleaned_data['password']))
             return HttpResponseRedirect('/')
+        else:
+            page_data['error'] = 'Invalid Login'
     else:
         form = LoginForm()
     page_data['form'] = form
