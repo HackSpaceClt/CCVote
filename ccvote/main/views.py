@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.utils import simplejson
 from main.models import GroupData
 from main.models import UserData
+from time import sleep
 
 #
 # Example view demonstrating template rendering and data access
@@ -35,12 +36,26 @@ def VoteClientMinimal(request):
     page_data = {}
     # 'managed_mode' should end up pulling from the DB somewhere...
     page_data['managed_mode'] = '0'
+    page_data['debug'] = '1'
     return render_to_response('main/VoteClientMinimal.html', page_data, RequestContext(request))
 
 def VoteClientAjax(request):
+    incoming_data = request.REQUEST
+    print "%s %s" % ('new state is', incoming_data['new_state'])
+    response_data = {}
+    response_data['result'] = 'test success'
+    response_data['message'] = "%s %s" % ('Server say - dis be what I got from you:', incoming_data['new_state'])
+    # this could potentially end up being different based on some conditions/tests here
+    response_data['new_state'] = incoming_data['new_state']
+    return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+
+def VoteClientAjaxLongPoll(request):
+    sleep(30)
     response_data = {}
     response_data['result'] = 'test success'
     response_data['message'] = "%s %s" % ('The world has been Hello-ified as of ', str(datetime.datetime.now()))
+    # this will end up coming from the DB or some other coding...
+    response_data['new_state'] = "active"
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 
 #

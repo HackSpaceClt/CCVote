@@ -55,6 +55,7 @@ urlpatterns = patterns('',
     # Voting client stuff
     url(r'^VoteClient/Minimal/?$', 'main.views.VoteClientMinimal', name="VoteClientMinimal"),
     url(r'^VoteClient/ajax/?$', 'main.views.VoteClientAjax', name="VoteClientAjax"),
+    url(r'^VoteClient/longpoll/?$', 'main.views.VoteClientAjaxLongPoll', name="VoteClientAjaxLongPoll"),
     
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -54,59 +54,48 @@ var image_active = "url({{ STATIC_URL }}img/voter_active.png)";
 var image_yea = "url({{ STATIC_URL }}img/voter_yea.png)";
 var image_nay = "url({{ STATIC_URL }}img/voter_nay.png)";
 var current_state = "inactive";
-var jq_ajax = $.ajax({
-                {% comment %}
-                // to do -- make the 'url' a templated variable
-                // ie "{% url 'main:VoteClientAjax' %}" (namespaced)
-                // or "{% url 'VoteClientAjax' %}" (named url pattern)
-                // As it is, I'm getting a NoReverseMatch error....
-                
-                url: '{% url 'main.views.VoteClientAjax' %}',
-                {% endcomment %}
-                url: '/VoteClient/ajax',
-                dataType : 'json',
-                cache: false
-                })
-        .done( function(data) {
-            alert('Load was performed. ' + data.message);
-            })
-        .fail( function() { alert("ajax call failed"); });
+var jqaj_longpoll = $.ajax();
+var jqaj_localchange = $.ajax();
 
 function click_handler(sent) {
-  if (current_state == sent) {
-	// document.vote_image.src = image_active.src;
-	// current_state = "active";
-	set_state("active");
-	return;
-	}
-  switch(sent) {
-    case "yea":
-        //document.vote_image.src = image_yea.src;
-        //current_state = "yea";
-		set_state("yea");
-        break;
-    case "nay":
-        //document.vote_image.src = image_nay.src;
-        //current_state = "nay";
-		set_state("nay");
-        break;
-    case "active":
-        //document.vote_image.src = image_abstain.src;
-        //current_state = "active";
-		set_state("active");
-        break;
-    default:
-        //document.vote_image.src = image_inactive.src;
-		set_state("inactive");
-    }
+    update_debug("entering click_handler with sent=" + sent + ", current_state=" + current_state);
+    var local_sent = sent;
+    var old_state = current_state;
+    if (current_state == sent) {
+        // if they click the same thing as what is currently set, let's go back
+        // to the "active" state
+        local_sent = "active";
+        }
+    jqaj_localchange = $.ajax({
+            url: '/VoteClient/ajax',
+            dataType : 'json',
+            cache: false,
+            data:   { 
+                    'new_state' : local_sent
+                    }
+            })
+        .done( function(data) {
+            update_debug('Ajax load was performed. ' + data.message);
+            current_state = data.new_state;
+            })
+        .fail( function() {
+            update_debug("ajax call failed");
+            // set things back the way they were
+            set_state(old_state);
+            });
+
+    // This'll run before the ajax call finishes
+    update_debug("getting ready to call set_state with new state - " + local_sent);
+    set_state(local_sent);
+	{% comment %}
+	// proof of concept for how to re-use the data that we got from our
+	// earlier ajax call.  It does _NOT_ re-call the ajax routine.
+	jqaj_localchange.always( function(data) { update_debug('update - ' + data.message); });
+	{% endcomment %}
   }
 
 function set_state(sent) {
-	// Need to:
-	//  - set the new state in the DB
-	//  - update the image & local state variable
-	//    -- dependent on success of DB update?  Or just
-	//		 re-update image on DB update success (or failure)
+    update_debug("entering set_state with sent=" + sent);
     var image_div = document.getElementById("vote_image_id");
     var new_image;
     switch(sent) {
@@ -124,15 +113,48 @@ function set_state(sent) {
       }
     current_state = sent;
     image_div.style.backgroundImage = new_image;
-	{% comment %}
-	// proof of concept for how to re-use the data that we got from our
-	// earlier ajax call.  It does _NOT_ re-call the ajax routine.
-	jq_ajax.always( function(data) { alert('update - ' + data.message); });
-	{% endcomment %}
+    update_debug("leaving set_state - current_state="+current_state);
 	}
+
+function long_poller() {
+    update_debug("entering long_poller");
+    jqaj_longpoll = $.ajax({
+                {% comment %}
+                // to do -- make the 'url' a templated variable
+                // ie "{% url 'main:VoteClientAjax' %}" (namespaced)
+                // or "{% url 'VoteClientAjax' %}" (named url pattern)
+                // As it is, I'm getting a NoReverseMatch error....
+                url: '{% url 'main.views.VoteClientAjax' %}',
+                {% endcomment %}
+                url: '/VoteClient/longpoll',
+                dataType : 'json',
+                cache: false
+                })
+        .done( function(data) {
+            update_debug('Load was performed from long_poller. ' + data.message);
+            if ( current_state != data.new_state ) {
+                update_debug("setting new state from long_poller");
+                set_state(data.new_state);
+                }
+            })
+        // .fail apparently also gets called when you navigate away from the
+        // page...
+        .fail( function() {
+            update_debug("ajax longpoll failed");
+            {% comment %}
+            // to do
+            // add some form of counter here that's checked in the recursive
+            // call so it doesn't just keep looping the call in the event of
+            // the server being down
+            {% endcomment %}
+            })
+        .always( function() { setTimeout(long_poller(), 40); });
+    }
+
 
 // things to run when the document's ready...
 $(document).ready( function() {
+    update_debug("entering document.ready");
 	// add our 'click handlers' to the div's
     addClickHandlers();
 	
@@ -144,6 +166,9 @@ $(document).ready( function() {
     else {
         set_state("active");
         }
+
+    update_debug("getting ready to call long_poller");
+    long_poller();
     });
 </script>
 {% endblock %}
@@ -159,8 +184,32 @@ $(document).ready( function() {
     </div>
 </div>
 
+{% if debug %}
+    <br />
+    <div id=debug_text style="color:white;" />
+{% endif %}
+
+
 <div style="visibility:hidden;">
     <script LANGUAGE="JavaScript" type="text/javascript">
+
+        function update_debug(debug_text) {
+            {% if debug %}
+                var debug_element = document.getElementById("debug_text");
+                var currentTime = new Date();
+                var hours = currentTime.getHours();
+                var minutes = currentTime.getMinutes();
+                var seconds = currentTime.getSeconds();
+                if (minutes < 10){
+                    minutes = "0" + minutes
+                    }
+                if (seconds < 10){
+                    seconds = "0" + seconds
+                    }
+                var time = hours + ":" + minutes + ":" + seconds;
+                debug_element.innerHTML += "<br />" + time + " - " + debug_text;
+            {% endif %}
+            }
 
         // lastly, let's preload images
         var preload_image_array = new Array();
