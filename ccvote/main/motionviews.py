@@ -35,22 +35,22 @@ class MotionId(forms.Form):
 class MotionControllerBase(ActionView):
 
     def get_motion_id(self, args):
-        id_form = MotionName(args)
+        id_form = MotionId(args)
         if not id_form.is_valid():
             # invalid url data somehow.. punt
             raise Http404
-
-        # TODO: insert motion_name validation
-        #       if we don't have a record by 
-        #       that name then punt (404)
-
-        # NOTE: May want a specialized "motion not found"
+#
+#        # TODO: insert motion_name validation
+#        #       if we don't have a record by
+#        #       that name then punt (404)
+#
+#        # NOTE: May want a specialized "motion not found"
         return id_form.cleaned_data['motion_id']
 
 class MotionDetails(MotionControllerBase):
     
     def action(self, args):
-        motion_name = self.get_motion_id(args)
+        motion_id = self.get_motion_id(args)
         try:
             motion = MotionData.objects.get(motion_id=motion_id)
         except ObjectDoesNotExist:
@@ -88,9 +88,9 @@ class MotionEdit(MotionControllerBase):
 
     def action_save(self, args):
         # Get the motion to *update*
-        motion_name = self.get_motion_id(args)
+        motion_id = self.get_motion_id(args)
         motion = MotionData.objects.get(motion_id=motion_id)
-        self.data['motion_name'] = motion_name
+        #self.data['motion_name'] = motion_name
 
         # bind form data against the pre-existing motion
         form = MotionForm(args, instance=motion)
@@ -103,12 +103,13 @@ class MotionEdit(MotionControllerBase):
         # TODO: Log action
         updated_motion.save()
         # TODO: recover from exceptions
-        return self.redirect('/motion/%s' % updated_motion.motion_name)
+        #return self.redirect('/motion/%s' % updated_motion.motion_id)
+        return self.redirect('/motions')
     
     def action(self, args):
         motion_id = self.get_motion_id(args)
         motion = MotionData.objects.get(motion_id=motion_id)
-        self.data['motion_id'] = motion
+        self.data['motion_id'] = motion_id
         form = MotionForm(instance=motion)
         return self.prompt_form(form)
 

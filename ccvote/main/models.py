@@ -134,9 +134,9 @@ class MotionData(models.Model):
             'Unique motion ID number', primary_key=True, db_column='motionID')
     motion_create_time = models.DateTimeField(
             'Date-time the motion was created', db_column='motionCreateTime', auto_now_add=True)
-    motion_parent = models.IntegerField(
-            'Parent motion (used for recalls)', null=True,
-            db_column='motionParent')
+#    motion_parent = models.IntegerField(
+#            'Parent motion (used for recalls)', null=True,
+#            db_column='motionParent')
     motion_vote_start = models.DateTimeField(
             'Voting window open time', null=True, db_column='motionVoteStart')
     motion_vote_end = models.DateTimeField(
