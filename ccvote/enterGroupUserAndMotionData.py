@@ -1,3 +1,6 @@
+
+import os
+os.environ["DJANGO_SETTINGS_MODULE"] = 'ccvote.settings'
 from main.models import *
 
 p = GroupData(group_id=1, group_name='member')
