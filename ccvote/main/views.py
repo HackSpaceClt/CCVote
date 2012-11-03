@@ -8,7 +8,7 @@ from django.utils import simplejson
 from main.models import GroupData
 from main.models import UserData
 from time import sleep
-from utils import Utils
+from utils import *
 
 #
 # Example view demonstrating template rendering and data access
@@ -19,6 +19,7 @@ def home(request):
     page_data['datetime'] = datetime.datetime.now()
     page_data['groups'] = GroupData.objects.all()
     page_data['users'] = UserData.objects.all()
+    page_data['user_name'] = Security.get_user_name(request)
     return render_to_response('main/home.html', page_data,
                               RequestContext(request))
 
@@ -66,20 +67,24 @@ def login(request):
     page_data = {}
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        if form.is_valid() and Utils.validate_user(
-                        form.cleaned_data['user_name'],
-                        form.cleaned_data['password']):
-            # TODO: do login stuff
-            logging.info('Login attempt: %s:%s' % 
-                         (form.cleaned_data['user_name'],
+        if form.is_valid():
+            user_name = form.cleaned_data['user_name']
+            if Security.validate_user(user_name, form.cleaned_data['password']):
+                # TODO: do login stuff
+                logging.info('Login attempt: %s:%s' %
+                         (user_name,
                           form.cleaned_data['password']))
-            return HttpResponseRedirect('/')
-        else:
-            page_data['error'] = 'Invalid Login'
+                Security.set_user_name(request, user_name)
+                return HttpResponseRedirect('/')
+        page_data['error'] = 'Invalid Login'
     else:
         form = LoginForm()
     page_data['form'] = form
     return render_to_response('main/login.html', page_data,
                                RequestContext(request))
+
+def logout(request):
+    Security.logout(request)
+    return HttpResponseRedirect('/')
 
 # vim: set sts=4 sw=4 expandtab:

@@ -168,11 +168,25 @@ class ActionView:
         else:
             return self.not_implemented()
 
-class Utils:
+class Security:
 
     @classmethod
     def validate_user(cls, user_name, password):
         user = UserData.objects.get(user_name=user_name)
         return user.verify_password(password)
+
+    @classmethod
+    def get_user_name(cls, request):
+        return request.session.get('user_name')
+
+    @classmethod
+    def set_user_name(cls, request, user_name):
+        request.session['user_name'] = user_name
+        return
+
+    @classmethod
+    def logout(cls, request):
+        Security.set_user_name(request, None)
+        return
 
 # vim: set sts=4 sw=4 expandtab:
