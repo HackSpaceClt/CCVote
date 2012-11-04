@@ -147,6 +147,7 @@ class ActionView:
         # URL arguments always override other data (for now)
         #
         self.data['request'] = request
+        self.data['user_name'] = Security.get_user_name(request)
         auth_template_vars(request, self.data)
         if request.method == 'GET':
             if request.GET:
