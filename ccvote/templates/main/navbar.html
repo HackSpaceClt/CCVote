@@ -13,6 +13,7 @@
 	        Need to set the "active" class on the appropriate item
 	      {% endcomment %} 
               <li class="active"><a href="/">Home</a></li>
+	      {% if AUTH_LEVEL_ADMIN %}
 	      <!-- Only display for users that have administrative access -->
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administrative <b class="caret"></b></a>
@@ -24,6 +25,8 @@
                   <li><a href="#lol-nope">Data Maintenance</a></li>
                 </ul>
               </li>
+	      {% endif %}
+	      {% if AUTH_LEVEL_CLERK %}
 	      <!-- Only display for users that have voting access -->
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Voting <b class="caret"></b></a>
@@ -32,7 +35,9 @@
                   <li><a href="#lol-nope">Perform Vote</a></li>
                 </ul>
               </li>
+	      {% endif %}
 	      <!-- Only display for users that have reporting access -->
+	      {% if AUTH_LEVEL_REPORTER %}
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -42,16 +47,13 @@
                   <li><a href="#lol-nope">Poop</a></li>
                 </ul>
               </li>
+	      {% endif %}
               <li><a href="#help">Help</a></li>
               <li><a href="#about">About</a></li>
+	      {% if LOGGED_IN %}
+              <li><a href="/logout">Logout</a></li>
+	      {% endif %}
             </ul>
-	    {% comment %}
-            <form class="navbar-form pull-right" action="/login" method="POST">{% csrf_token %}
-              <input class="span2" type="text" name="user_name" placeholder="Username">
-              <input class="span2" type="password" name="password" placeholder="Password">
-              <input type="submit" name="action_submit" class="btn" value="Sign in">
-            </form>
-	    {% endcomment %}
           </div><!--/.nav-collapse -->
         </div>
       </div>

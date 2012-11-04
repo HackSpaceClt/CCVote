@@ -1,13 +1,22 @@
 {% extends "main/base_page.html" %}
 
+{% block navigation %}
+{% include "main/navbar.html" %}
+{% endblock %}
+
 {% block content %}
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
         <h1>City Council Voting</h1>
+	{{ note }}
         <h3>Please log in</h3>
         <p><a href="/login" class="btn btn-primary btn-large">Login</a></p>
         {% if user_name %}
+	    {% comment %}
             <p>UserName: {{ user_name }} <a href="/logout" class="btn btn-primary btn-large">Logout</a></p>
+	    <!-- Logout is in the navbar now -->
+	    {% endcomment %}
+            <p>UserName: {{ user_name }}</p>
         {% endif %}
       </div>
 {% endblock %}

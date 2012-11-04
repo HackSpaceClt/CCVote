@@ -90,18 +90,35 @@ class UserData(models.Model):
 
     def set_password(self, password):
         # SHA256 hash store
-        #salt = os.urandom(8)
-        hash = hashlib.sha256(password) # +salt
-        storage = '%s' % hash.hexdigest() #'%s%s' % (salt.encode('hex'), hash.hexdigest())
+        salt = os.urandom(8)
+        hash = hashlib.sha256(password) + salt
+        storage = '%s%s' % (salt.encode('hex'), hash.hexdigest())
         self.user_pwhash = storage
+
+        # SHA256 hash store
+        # salt = os.urandom(8)
+        # hash = hashlib.sha256(password) # +salt
+        # storage = '%s' % hash.hexdigest() #'%s%s' % (salt.encode('hex'), hash.hexdigest())
+        # self.user_pwhash = storage
     
     def verify_password(self, password):
-        #shex = self.user_pwhash[:16]
-        #hash = self.user_pwhash[16:]
-        #salt = shex.decode('hex')
-        hash = hashlib.sha256(password)
-        storage = '%s' % hash.hexdigest()
-        if storage == self.user_pwhash:
+        # #shex = self.user_pwhash[:16]
+        # #hash = self.user_pwhash[16:]
+        # #salt = shex.decode('hex')
+        # hash = hashlib.sha256(password)
+        # storage = '%s' % hash.hexdigest()
+        # if storage == self.user_pwhash:
+        #     return True
+        # else:
+        #     return False
+
+        # wreel - well...erm uh... we'll get back to this.
+        #
+        shex = self.user_pwhash[:16]
+        hash = self.user_pwhash[16:]
+        salt = shex.decode('hex')
+        test = hashlib.sha256(password + salt).hexdigest()
+        if hash == test:
             return True
         else:
             return False

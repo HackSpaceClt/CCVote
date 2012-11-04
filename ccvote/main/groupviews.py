@@ -9,6 +9,7 @@ from main.utils import ActionView
 from main.utils import BoolSelect
 from main.models import GroupData
 from main.models import UserData
+from main.authorization import *
 
 logger = getLogger('debugging')
 
@@ -42,6 +43,7 @@ class GroupControllerBase(ActionView):
 
 class GroupDetails(GroupControllerBase):
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         group_name = self.get_group_name(args)
         try:
@@ -60,6 +62,7 @@ class GroupCreate(ActionView):
         self.data['form'] = form
         return self.render_html('main/group-create.html')
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action_save(self, args):
         form = GroupForm(args)
         if not form.is_valid():
@@ -69,6 +72,7 @@ class GroupCreate(ActionView):
         form.save()
         return self.redirect('/groups')
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def default(self):
         form = GroupForm()
         return self.prompt_form(form)
@@ -79,6 +83,7 @@ class GroupEdit(GroupControllerBase):
         self.data['form'] = form
         return self.render_html('main/group-edit.html')
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action_save(self, args):
         # Get the group to *update*
         group_name = self.get_group_name(args)
@@ -98,6 +103,7 @@ class GroupEdit(GroupControllerBase):
         # TODO: recover from exceptions
         return self.redirect('/group/%s' % updated_group.group_name)
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         group_name = self.get_group_name(args)
         group = GroupData.objects.get(group_name=group_name)
@@ -107,6 +113,7 @@ class GroupEdit(GroupControllerBase):
 
 class GroupListing(GroupControllerBase):
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         groups_all = GroupData.objects.all()
         paginator = Paginator(groups_all, 25)
@@ -122,6 +129,7 @@ class GroupListing(GroupControllerBase):
         self.data['groups'] = groups
         return self.render_html('main/groups.html')
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def default(self):
         groups_all = GroupData.objects.all()
         paginator = Paginator(groups_all, 25)

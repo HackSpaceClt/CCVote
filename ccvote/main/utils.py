@@ -1,3 +1,4 @@
+import datetime
 from django import forms
 from django.template import Context
 from django.template import RequestContext
@@ -10,6 +11,7 @@ from django.http import QueryDict
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from models import UserData
+from main.authorization import *
 
 logger = getLogger('debugging')
 
@@ -145,6 +147,7 @@ class ActionView:
         # URL arguments always override other data (for now)
         #
         self.data['request'] = request
+        auth_template_vars(request, self.data)
         if request.method == 'GET':
             if request.GET:
                 args = request.GET.copy()
@@ -180,13 +183,44 @@ class Security:
         return request.session.get('user_name')
 
     @classmethod
+    def get_user_id(cls, request):
+        return request.session.get('user_id')
+
+    @classmethod
     def set_user_name(cls, request, user_name):
         request.session['user_name'] = user_name
-        return
+
+    @classmethod
+    def set_user_id(cls, request, user_id):
+        request.session['user_id'] = user_id
+
+    @classmethod
+    def login(cls, request, user_name, password):
+        '''
+        Perform a login using a utf8 encoded user_name/password combo
+        Returns False on authentication error
+        '''
+        try:
+            user = UserData.objects.get(user_name=user_name)
+        except ObjectDoesNotExist:
+            return False
+
+	if not user.verify_password(password):
+            return False
+
+        # TODO: log actions in LogData
+	user.user_last_login = datetime.datetime.utcnow()
+        user.save()
+
+        # Authorization is driven off of user_id
+        Security.set_user_id(request, user.user_id)
+        # Username is handy to have in the session in any case
+        Security.set_user_name(request, user.user_name)
+        return True
 
     @classmethod
     def logout(cls, request):
+        Security.set_user_id(request, None)
         Security.set_user_name(request, None)
-        return
 
 # vim: set sts=4 sw=4 expandtab:

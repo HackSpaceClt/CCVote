@@ -3,12 +3,14 @@ import datetime
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import simplejson
 from main.models import GroupData
 from main.models import UserData
 from time import sleep
 from utils import *
+from main.authorization import *
 
 #
 # Example view demonstrating template rendering and data access
@@ -16,10 +18,9 @@ from utils import *
 def home(request):
     page_data = {}
     page_data['project_name'] = 'City Council Voting'
-    page_data['datetime'] = datetime.datetime.now()
-    page_data['groups'] = GroupData.objects.all()
-    page_data['users'] = UserData.objects.all()
     page_data['user_name'] = Security.get_user_name(request)
+    page_data['request'] = request
+    auth_template_vars(request, page_data)
     return render_to_response('main/home.html', page_data,
                               RequestContext(request))
 
@@ -28,11 +29,6 @@ def videoOverlay(request):
     videoDisplayData['nameAndVote']=VoteTemp.objects.values('user_name').fil
     return render_to_response('main/videoOverlay.html', videoDisplayData, RequestContext(request))
 
-class LoginForm(forms.Form):
-    user_name = forms.CharField(label='Login', max_length=20)
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-
-    
 # Views for vote clients
 def VoteClientMinimal(request):
     page_data = {}
@@ -60,31 +56,8 @@ def VoteClientAjaxLongPoll(request):
     response_data['new_state'] = "active"
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 
-#
-# Example view demonstrating form handling
-#
-def login(request):
-    page_data = {}
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user_name = form.cleaned_data['user_name']
-            if Security.validate_user(user_name, form.cleaned_data['password']):
-                # TODO: do login stuff
-                logging.info('Login attempt: %s:%s' %
-                         (user_name,
-                          form.cleaned_data['password']))
-                Security.set_user_name(request, user_name)
-                return HttpResponseRedirect('/')
-        page_data['error'] = 'Invalid Login'
-    else:
-        form = LoginForm()
-    page_data['form'] = form
-    return render_to_response('main/login.html', page_data,
-                               RequestContext(request))
-
 def logout(request):
-    Security.logout(request)
-    return HttpResponseRedirect('/')
+    request.session['user_id'] = None
+    return redirect('/')
 
 # vim: set sts=4 sw=4 expandtab:

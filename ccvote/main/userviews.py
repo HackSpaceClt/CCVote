@@ -12,6 +12,7 @@ from main import models
 from main.models import GroupData
 from main.models import UserData
 from main.models import USER_STATUS_CHOICES
+from main.authorization import *
 
 logger = getLogger('debugging')
 
@@ -68,12 +69,14 @@ class UserControllerBase(ActionView):
 
 class UserDetails(UserControllerBase):
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         self.data['usr'] = self.get_user_rec(args)
         return self.render_html('main/user.html')
 
 class UserDeleteConfirm(UserControllerBase):
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action_delete(self, args):
         user = self.get_user_rec(args)
         # TODO: make a transaction and log it in LogData
@@ -82,6 +85,7 @@ class UserDeleteConfirm(UserControllerBase):
         user.delete()
         return self.redirect('/users/')
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         self.data['usr'] = self.get_user_rec(args)
         return self.render_html('main/user-delete.html')
@@ -92,6 +96,7 @@ class UserCreate(ActionView):
         self.data['form'] = form
         return self.render_html('main/user-create.html')
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action_save(self, args):
         form = UserForm(args)
         if not form.is_valid():
@@ -112,6 +117,7 @@ class UserCreate(ActionView):
         new_user.save()
         return self.redirect('/users')
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def default(self):
         form = UserForm()
         return self.prompt_form(form)
@@ -122,6 +128,7 @@ class UserEdit(UserControllerBase):
         self.data['form'] = form
         return self.render_html('main/user-edit.html')
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action_save(self, args):
         user = self.get_user_rec(args)
         self.data['user_name'] = user.user_name
@@ -152,6 +159,7 @@ class UserEdit(UserControllerBase):
         # TODO: recover from exceptions
         return self.redirect('/user/%s' % user.user_name)
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         user = self.get_user_rec(args)
         self.data['user_name'] = user.user_name
@@ -168,6 +176,7 @@ class UserEdit(UserControllerBase):
 
 class UserListing(UserControllerBase):
 
+    @authorize(AUTH_LEVEL_ADMIN)
     def action(self, args):
         users_all = UserData.objects.all()
         paginator = Paginator(users_all, 25)
@@ -183,6 +192,7 @@ class UserListing(UserControllerBase):
         self.data['users'] = users
         return self.render_html('main/users.html')
     
+    @authorize(AUTH_LEVEL_ADMIN)
     def default(self):
         users_all = UserData.objects.all()
         paginator = Paginator(users_all, 25)
