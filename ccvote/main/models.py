@@ -91,7 +91,7 @@ class UserData(models.Model):
     def set_password(self, password):
         # SHA256 hash store
         salt = os.urandom(8)
-        hash = hashlib.sha256(password) + salt
+        hash = hashlib.sha256(password + salt)
         storage = '%s%s' % (salt.encode('hex'), hash.hexdigest())
         self.user_pwhash = storage
 

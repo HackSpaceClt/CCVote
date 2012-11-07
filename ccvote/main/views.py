@@ -57,7 +57,7 @@ def VoteClientAjaxLongPoll(request):
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 
 def logout(request):
-    request.session['user_id'] = None
+    Security.logout(request)
     return redirect('/')
 
 # vim: set sts=4 sw=4 expandtab:
