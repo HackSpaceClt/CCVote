@@ -10,7 +10,7 @@ from django.utils.log import getLogger
 from django.http import QueryDict
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from models import UserData
+from models import *
 from main.authorization import *
 
 logger = getLogger('debugging')
@@ -206,11 +206,12 @@ class Security:
         except ObjectDoesNotExist:
             return False
 
-	if not user.verify_password(password):
+        if not user.verify_password(password):
             return False
 
         # TODO: log actions in LogData
-	user.user_last_login = datetime.datetime.utcnow()
+        user.user_last_login = datetime.datetime.utcnow()
+        user.user_status = 'logged_in'
         user.save()
 
         # Authorization is driven off of user_id
@@ -221,7 +222,81 @@ class Security:
 
     @classmethod
     def logout(cls, request):
+        user = UserData.objects.get(user_name=Security.get_user_name(request))
+        user.user_status = 'logged_out'
+        user.save()
         Security.set_user_id(request, None)
         Security.set_user_name(request, None)
+
+class MeetingState:
+
+    @classmethod
+    def set_user_vote(cls, request, sent_vote):
+        # need to test
+        # Set the current user's vote
+        local_vote = VoteData(
+            motion_id = meeting_state.get_current_motion.motion_id,
+            user_id = Security.get_user_id,
+            vote_time = datetime.datetime.utcnow(),
+            vote = sent_vote)
+        local_vote.save()
+        return local_vote
+
+    @classmethod
+    def get_current_motion(cls):
+        # Nothing passed, as all we're doing here is returning the
+        # current motion (well, "latest" motion based on the
+        # 'motion_vote_start' date/time).
+        #
+        # Question -- should this be renamed to 'open_motion', with
+        # a purposefully ambiguous name relating to its ambiguous
+        # function?  Ie, call 'meeting_state.open_motion' to return
+        # the current open motion, and if there's not one currently
+        # open (motion_vote_start exists, but motion_vote_end is null), 
+        # then it should create one (and return it)?
+        # (using django method 'get_or_create' -- so maybe name it
+        # 'get_or_create_current_motion')
+        return MotionData.objects.select_related().latest('motion_vote_start')
+
+    @classmethod
+    def get_votes_in_motion(cls, sent_motion):
+        # returns a list of 'VoteData' objects (and related
+        # objects) associated with the passed 'MotionData'
+        # object.
+        #
+        # If you call this and try to iterate through the
+        # returned 'VoteData's, you'll only see votes for
+        # people that've actually cast a vote.  If you want
+        # to see everybody that's logged in, use
+        # 'MeetingState.get_logged_in_users()'.
+        try:
+            local_votes = VoteData.objects.select_related().filter(
+                motion_id=sent_motion.motion_id)
+        except ObjectDoesNotExist:
+            return False
+        return local_votes
+
+    @classmethod
+    def get_logged_in_users(cls):
+        # returns a list of 'UserData' objects
+        try:
+            local_users = UserData.objects.filter(user_status='logged_in')
+        except ObjectDoesNotExist:
+            return False
+        return local_users
+
+    @classmethod
+    def get_current_meeting_motions(cls):
+        # returns a list of 'MotionData's with the same
+        # meeting_id as...  oh wait, we don't have that yet.
+        #
+        # Okay -- I'm just going to return the last 5 motions...
+        #
+        # Sorting ascending by 'motion_vote_start', then reversing
+        # and returning only the first 5.  That'll put them in
+        # 'most-recent-first' order.
+        return MotionData.objects.select_related().order_by(
+            'motion_vote_start').reverse()[:5]
+
 
 # vim: set sts=4 sw=4 expandtab:
