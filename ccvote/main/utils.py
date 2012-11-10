@@ -210,7 +210,7 @@ class Security:
             return False
 
         # TODO: log actions in LogData
-        user.user_last_login = datetime.datetime.utcnow()
+        user.user_last_login = datetime.datetime.now()
         user.user_status = 'logged_in'
         user.save()
 
@@ -237,7 +237,7 @@ class MeetingState:
         local_vote = VoteData(
             motion_id = meeting_state.get_current_motion.motion_id,
             user_id = Security.get_user_id,
-            vote_time = datetime.datetime.utcnow(),
+            vote_time = datetime.datetime.now(),
             vote = sent_vote)
         local_vote.save()
         return local_vote
