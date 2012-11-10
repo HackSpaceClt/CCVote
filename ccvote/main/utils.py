@@ -13,6 +13,8 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from main.authorization import auth_template_vars
 from models import *
+from django.db.models.fields import DateField
+from django.db.models.fields.related import ForeignKey
 
 logger = getLogger('debugging')
 
@@ -20,6 +22,32 @@ simple_response = '''<html>
 <head><title>{response_string}</title></head>
 <body><h1>{response_string}</h1><p>{details}</p></body>
 </html>'''
+
+def instance_dict(instance, key_format=None):
+    """
+    Returns a dictionary containing field names and values for the given
+    instance
+    http://djangosnippets.org/snippets/199/
+    """
+    if key_format:
+        assert '%s' in key_format, 'key_format must contain a %s'
+    key = lambda key: key_format and key_format % key or key
+
+    pk = instance._get_pk_val()
+    d = {}
+    for field in instance._meta.fields:
+        attr = field.name
+        if hasattr(instance, attr): # django filer broke without this check
+            value = getattr(instance, attr)
+            if value is not None:
+                if isinstance(field, ForeignKey):
+                    value = value._get_pk_val()
+                elif isinstance(field, DateField):
+                    value = value.isoformat()
+        else:
+            value = None
+        d[key(attr)] = value
+    return d
 
 class BoolSelect(forms.Select):
     '''Fixed drop-down select for BOOLEAN_CHOICES'''
@@ -224,7 +252,7 @@ class Security:
             return False
 
         # TODO: log actions in LogData
-        user.user_last_login = datetime.datetime.utcnow()
+        user.user_last_login = datetime.datetime.now()
         user.user_status = 'logged_in'
         user.save()
 
