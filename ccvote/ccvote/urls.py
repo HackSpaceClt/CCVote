@@ -23,7 +23,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'main.views.home', name='home'),
-    url(r'^videoOverlay$', 'main.views.videoOverlay', name='videoOverlay'),
+    url(r'^videooverlay$', 'main.views.videoOverlay', name='videoOverlay'),
 
     # Other examples for guidance:
     # url(r'^articles/(\d{4})/(\d{2})/(\d+)/$', 'news.views.article_detail')
@@ -55,9 +55,9 @@ urlpatterns = patterns('',
     # url(r'^ccvote/', include('ccvote.foo.urls')),
 
     # Voting client stuff
-    url(r'^VoteClient/Minimal/?$', 'main.views.VoteClientMinimal', name="VoteClientMinimal"),
-    url(r'^VoteClient/ajax/?$', 'main.views.VoteClientAjax', name="VoteClientAjax"),
-    url(r'^VoteClient/longpoll/?$', 'main.views.VoteClientAjaxLongPoll', name="VoteClientAjaxLongPoll"),
+    url(r'^voteclient/minimal/?$', 'main.views.VoteClientMinimal', name="VoteClientMinimal"),
+    url(r'^voteclient/ajax/?$', 'main.views.VoteClientAjax', name="VoteClientAjax"),
+    url(r'^voteclient/longpoll/?$', 'main.views.VoteClientAjaxLongPoll', name="VoteClientAjaxLongPoll"),
     
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
