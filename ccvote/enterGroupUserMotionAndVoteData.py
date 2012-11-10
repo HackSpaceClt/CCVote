@@ -1,17 +1,13 @@
-
-import os
-os.environ["DJANGO_SETTINGS_MODULE"] = 'ccvote.settings'
 from main.models import *
 
 p = GroupData(group_id=1, group_name='member')
 p.save()
 p = GroupData(group_id=2, group_name='Mayor')
 p.save()
-p = GroupData(group_id=3, group_name='clerk', group_motion_maint=True, group_run_reports=True, group_voter=True, group_admin=True)
+p = GroupData(group_id=3, group_name='clerk')
 p.save()
 
 p = UserData(user_name='jautry', user_full_name='John Autry', user_status='logged_in', group_id=GroupData.objects.get(group_id=1))
-p.set_password('jautry')
 p.save()
 p = UserData(user_name='mbarnes', user_full_name='Michael Barnes', user_status='logged_in', group_id=GroupData.objects.get(group_id=1))
 p.save()
@@ -36,8 +32,34 @@ p.save()
 p = UserData(user_name='afox', user_full_name='Anthony Fox', user_status='logged_in', group_id=GroupData.objects.get(group_id=2))
 p.save()
 p = UserData(user_name='alastname', user_full_name='Ashley Lastname', user_status='logged_in', group_id=GroupData.objects.get(group_id=3))
-p.set_password('password')
 p.save()
+
 
 p = MotionData(motion_id=1, motion_clerk_id=UserData.objects.get(user_id=13))
 p.save()
+
+
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=1), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=2), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=3), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=4), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=5), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=6), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=7), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=8), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=9), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=10), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=11), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=12), vote='pro')
+

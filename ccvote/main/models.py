@@ -183,7 +183,7 @@ class VoteData(models.Model):
     user_id = models.ForeignKey(
             UserData, verbose_name='User casting the vote', db_column='userID')
     vote_time = models.DateTimeField(
-            'Time the vote was cast', db_column='voteTime')
+            'Time the vote was cast', db_column='voteTime', auto_now=True)
     vote = models.CharField('pro/con/abstain', max_length=10)
     class Meta:
         db_table = u'votedata'
