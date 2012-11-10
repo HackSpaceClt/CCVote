@@ -67,7 +67,7 @@ function click_handler(sent) {
         local_sent = "active";
         }
     jqaj_localchange = $.ajax({
-            url: '/VoteClient/ajax',
+            url: '/voteclient/ajax',
             dataType : 'json',
             cache: false,
             data:   { 
@@ -126,7 +126,7 @@ function long_poller() {
                 // As it is, I'm getting a NoReverseMatch error....
                 url: '{% url 'main.views.VoteClientAjax' %}',
                 {% endcomment %}
-                url: '/VoteClient/longpoll',
+                url: '/voteclient/longpoll',
                 dataType : 'json',
                 cache: false
                 })
