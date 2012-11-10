@@ -59,6 +59,9 @@ urlpatterns = patterns('',
     url(r'^voteclient/ajax/?$', 'main.views.VoteClientAjax', name="VoteClientAjax"),
     url(r'^voteclient/longpoll/?$', 'main.views.VoteClientAjaxLongPoll', name="VoteClientAjaxLongPoll"),
     
+    # Clerk interface
+    url(r'^clerk/?$', 'main.views.ClerkInterface', name="ClerkInterface"),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

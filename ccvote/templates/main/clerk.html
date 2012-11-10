@@ -1,0 +1,51 @@
+{% extends "main/base_page.html" %}
+
+{% block navigation %}
+{% include "main/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+
+{% for motion in current_meeting_motions %}
+    <h1>{{ motion.motion_description }}</h1>
+    {% for vote in motion.votedata_set.all %}
+        {{ vote.user_id.user_full_name }}: {{ vote.vote }}
+        <br />
+    {% endfor %}
+{% endfor %}
+      
+
+<br /><br />
+<h1>Example text to be copied to granicus</h1>
+<h2>(format to be determined by clerk's office)</h2>
+
+<div id="to_be_copied">
+<pre>
+For:
+    Michael Barnes, David Howard, Warren Cooksey, Mayor Anthony Foxx, Patrick Cannon, John Autry, Claire Green Fallon
+
+Against:
+    Beth Pickering, LaWana Mayfield, Andy Dulin, James Mitchell, Patsy Kinsey
+</pre>
+</div>
+
+<div id="hidden_div" style="position:fixed; top:-20%;"></div>
+
+<br /><br />
+
+<input type=button name=copyme onclick="copyToClipboard();" value="Click this button to copy the above to your clipboard" />
+
+<script type="text/javascript">
+function copyToClipboard() {
+var r = document.body.createTextRange();
+r.moveToElementText(document.getElementById('to_be_copied'));
+r.select();  
+r.execCommand("Copy");
+
+// deselect, so the browser doesn't leave the element visibly selected
+r.moveToElementText(document.getElementById('hidden_div'));
+r.select();
+}
+</script>
+
+{% endblock %}
