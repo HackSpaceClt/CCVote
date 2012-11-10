@@ -86,8 +86,7 @@ def authorize(*levels):
             #
             # Check if authenticated
             #
-            if ('user_id' not in request.session) \
-                or (not request.session['user_id']):
+            if not request.session.get('user_id'):
                 params = dict(ref=request.path)
                 return redirect('/login?%s' % urllib.urlencode(params))
 
