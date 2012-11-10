@@ -1,5 +1,6 @@
 import datetime
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 from django.template import Context
 from django.template import RequestContext
 from django.template import loader
@@ -10,8 +11,8 @@ from django.utils.log import getLogger
 from django.http import QueryDict
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from main.authorization import auth_template_vars
 from models import *
-from main.authorization import *
 
 logger = getLogger('debugging')
 
@@ -176,8 +177,21 @@ class Security:
 
     @classmethod
     def validate_user(cls, user_name, password):
-        user = UserData.objects.get(user_name=user_name)
+        user = Security.get_user(user_name)
+        if user is None:
+            return False
         return user.verify_password(password)
+
+    @classmethod
+    def get_user(cls, user_name):
+        try:
+            return UserData.objects.get(user_name=user_name)
+        except:
+            return None
+
+    @classmethod
+    def get_current_user(cls, request):
+        return Security.get_user(request, Security.get_user_name(request))
 
     @classmethod
     def get_user_name(cls, request):
@@ -228,19 +242,29 @@ class Security:
         Security.set_user_id(request, None)
         Security.set_user_name(request, None)
 
+    @classmethod
+    def loggedin(cls, request):
+        return Security.get_user_name(request) is not None
+
 class MeetingState:
 
     @classmethod
-    def set_user_vote(cls, request, sent_vote):
-        # need to test
+    def set_user_vote(cls, motion_id, user_id, sent_vote):
         # Set the current user's vote
-        local_vote = VoteData(
-            motion_id = meeting_state.get_current_motion.motion_id,
-            user_id = Security.get_user_id,
-            vote_time = datetime.datetime.utcnow(),
-            vote = sent_vote)
-        local_vote.save()
-        return local_vote
+
+        motion = MotionData.objects.get(motion_id = motion_id)
+        user = UserData.objects.get(user_id = user_id)
+
+        try:
+            vote = VoteData.objects.get(motion_id=motion, user_id=user)
+        except VoteData.DoesNotExist:
+            vote = VoteData(motion_id=motion, user_id=user)
+
+        vote.vote_time = datetime.datetime.utcnow()
+        vote.vote = sent_vote
+        vote.save()
+
+        return vote
 
     @classmethod
     def get_current_motion(cls):

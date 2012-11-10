@@ -45,20 +45,25 @@ body { background-color: black; }
 
 <script LANGUAGE="JavaScript" type="text/javascript">
 function addClickHandlers() {
-    $("#box_yea").click( function() { click_handler("yea") });
-    $("#box_nay").click( function() { click_handler("nay") });
+    $("#box_yea").click( function() { click_handler("pro") });
+    $("#box_nay").click( function() { click_handler("con") });
     }
 
 var image_inactive = "url({{ STATIC_URL }}img/voter_inactive.png)";
 var image_active = "url({{ STATIC_URL }}img/voter_active.png)";
 var image_yea = "url({{ STATIC_URL }}img/voter_yea.png)";
 var image_nay = "url({{ STATIC_URL }}img/voter_nay.png)";
+var user_id = "{{ user_id }}";
+var motion_id = "{{ motion_id }}";
 var current_state = "inactive";
 var jqaj_longpoll = $.ajax();
 var jqaj_localchange = $.ajax();
 
 function click_handler(sent) {
-    update_debug("entering click_handler with sent=" + sent + ", current_state=" + current_state);
+    update_debug("entering click_handler with sent=" + sent
+            + ", current_state=" + current_state
+            + ", motion_id=" + motion_id
+            + ", user_id=" + user_id);
     var local_sent = sent;
     var old_state = current_state;
     if (current_state == sent) {
@@ -70,7 +75,9 @@ function click_handler(sent) {
             url: '/VoteClient/ajax',
             dataType : 'json',
             cache: false,
-            data:   { 
+            data:   {
+                    motion_id: motion_id,
+                    user_id: user_id,
                     'new_state' : local_sent
                     }
             })
@@ -99,10 +106,10 @@ function set_state(sent) {
     var image_div = document.getElementById("vote_image_id");
     var new_image;
     switch(sent) {
-      case "yea":
+      case "pro":
         new_image = image_yea;
         break;
-      case "nay":
+      case "con":
         new_image = image_nay;
         break;
       case "active":

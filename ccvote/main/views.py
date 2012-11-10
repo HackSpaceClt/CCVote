@@ -25,8 +25,9 @@ def home(request):
                               RequestContext(request))
 
 def videoOverlay(request):
-    videoDisplayData['names']=VoteTemp.objects.values('user_name')
-    videoDisplayData['nameAndVote']=VoteTemp.objects.values('user_name').fil
+    videoDisplayData = {}
+    videoDisplayData['names'] = VoteTemp.objects.values('user_name')
+    videoDisplayData['nameAndVote'] = VoteTemp.objects.values('user_name').fil
     return render_to_response('main/videoOverlay.html', videoDisplayData, RequestContext(request))
 
 # Views for vote clients
@@ -35,14 +36,20 @@ def VoteClientMinimal(request):
     # 'managed_mode' should end up pulling from the DB somewhere...
     page_data['managed_mode'] = '0'
     page_data['debug'] = '1'
+    page_data['user_id'] = Security.get_user_id(request)
+    page_data['motion_id'] = MeetingState.get_current_motion().motion_id
     return render_to_response('main/VoteClientMinimal.html', page_data, RequestContext(request))
 
 def VoteClientAjax(request):
     incoming_data = request.REQUEST
     print "%s %s" % ('new state is', incoming_data['new_state'])
+
+    MeetingState.set_user_vote(incoming_data['motion_id'], incoming_data['user_id'], incoming_data['new_state'])
+
     response_data = {}
     response_data['result'] = 'test success'
-    response_data['message'] = "%s %s" % ('Server say - dis be what I got from you:', incoming_data['new_state'])
+    response_data['message'] = "Server say - dis be what I got from you: %s %s %s" % (
+        incoming_data['motion_id'], incoming_data['new_state'], incoming_data['user_id'])
     # this could potentially end up being different based on some conditions/tests here
     response_data['new_state'] = incoming_data['new_state']
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
