@@ -11,6 +11,7 @@ p = GroupData(group_id=3, group_name='clerk')
 p.save()
 
 p = UserData(user_name='jautry', user_full_name='John Autry', user_status='logged_in', group_id=GroupData.objects.get(group_id=1))
+p.set_password('jautry')
 p.save()
 p = UserData(user_name='mbarnes', user_full_name='Michael Barnes', user_status='logged_in', group_id=GroupData.objects.get(group_id=1))
 p.save()
