@@ -70,6 +70,8 @@ def ClerkInterface(request):
     page_data['user_name'] = Security.get_user_name(request)
     page_data['request'] = request
     page_data['current_meeting_motions'] = MeetingState.get_current_meeting_motions()
+    page_data['varname_for'] = "pro"
+    page_data['varname_against'] = "con"
     auth_template_vars(request, page_data)
     # passed_method = MeetingState.get_votes_in_motion(template_passed_motion)
     return render_to_response('main/clerk.html', page_data, RequestContext(request))

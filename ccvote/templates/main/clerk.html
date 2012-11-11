@@ -6,46 +6,87 @@
 
 {% block content %}
 
+<table>
 {% for motion in current_meeting_motions %}
-    <h1>{{ motion.motion_description }}</h1>
-    {% for vote in motion.votedata_set.all %}
-        {{ vote.user_id.user_full_name }}: {{ vote.vote }}
-        <br />
-    {% endfor %}
+<tr>
+{% comment %}
+  <td valign="top">
+    <img src="{{ STATIC_URL }}img/icon_copy.png" alt="Copy to clipboard"
+        height="30"
+        onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')">
+  </td>
+{% endcomment %}
+  <td>
+    <table><tr>
+    <td><h2>{{ motion.motion_description|title }}</h2></td>
+    <td>
+        &nbsp;
+        <img src="{{ STATIC_URL }}img/icon_copy_20x20.png"
+            alt="Copy to clipboard"
+            onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')"
+            name="copybutton-{{ motion.motion_id }}"
+            onMouseDown="copybutton_clicked('copybutton-{{ motion.motion_id }}')"
+            onMouseUp="copybutton_released('copybutton-{{ motion.motion_id }}')"
+            >
+    </td></tr></table>
+    {% with m_vote_objs=motion.votedata_set.all %}
+    {% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
+    <div id="copydiv-{{ motion.motion_id }}">
+        {% for votestatus in votestatus_list %}
+            <h3>
+            {% if votestatus.grouper == varname_for %}For:{% endif %}
+            {% if votestatus.grouper == varname_against %}Against:{% endif %}
+            </h3>
+            {% for vote_obj in votestatus.list %}
+                {% comment %}
+                    <!-- /sigh...  Stupid whitespace issue.... -->
+                {% if not forloop.first %}, {% endif %}
+                {{ vote_obj.user_id.user_full_name }}
+                {% endcomment %}
+                {% if not forloop.last %}
+                    {{ vote_obj.user_id.user_full_name }},
+                {% else %}
+                    {{ vote_obj.user_id.user_full_name }}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endwith %}
+    <br /><br />
+  </td>
+</tr>
 {% endfor %}
-      
-
-<br /><br />
-<h1>Example text to be copied to granicus</h1>
-<h2>(format to be determined by clerk's office)</h2>
-
-<div id="to_be_copied">
-<pre>
-For:
-    Michael Barnes, David Howard, Warren Cooksey, Mayor Anthony Foxx, Patrick Cannon, John Autry, Claire Green Fallon
-
-Against:
-    Beth Pickering, LaWana Mayfield, Andy Dulin, James Mitchell, Patsy Kinsey
-</pre>
-</div>
+</table>
 
 <div id="hidden_div" style="position:fixed; top:-20%;"></div>
 
-<br /><br />
-
-<input type=button name=copyme onclick="copyToClipboard();" value="Click this button to copy the above to your clipboard" />
-
 <script type="text/javascript">
-function copyToClipboard() {
-var r = document.body.createTextRange();
-r.moveToElementText(document.getElementById('to_be_copied'));
-r.select();  
-r.execCommand("Copy");
+function copyToClipboard(element_to_copy) {
+    var r = document.body.createTextRange();
+    r.moveToElementText(document.getElementById(element_to_copy));
+    r.select();  
+    r.execCommand("Copy");
 
-// deselect, so the browser doesn't leave the element visibly selected
-r.moveToElementText(document.getElementById('hidden_div'));
-r.select();
-}
+    // deselect, so the browser doesn't leave the element visibly selected
+    r.moveToElementText(document.getElementById('hidden_div'));
+    r.select();
+    }
+
+if (document.images) {
+    var copybutton_up = new Image();
+    copybutton_up.src = "{{ STATIC_URL }}img/icon_copy_20x20.png";
+    var copybutton_down = new Image();
+    copybutton_down.src = "{{ STATIC_URL }}img/icon_copy_inv_20x20.png";
+    }
+
+function copybutton_clicked(img_name) {
+    document[img_name].src = copybutton_down.src
+    }
+
+function copybutton_released(img_name) {
+    document[img_name].src = copybutton_up.src
+    }
+
 </script>
 
 {% endblock %}
