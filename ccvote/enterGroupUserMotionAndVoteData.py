@@ -1,4 +1,11 @@
+import time
 from main.models import *
+
+# set vote_cycle to the number of seconds you want to delay before each cycle of votes is entered (use 0 for no delay):
+vote_cycle = 1
+
+def vote_delay(vote_cycle):
+    time.sleep(vote_cycle)
 
 p = GroupData(group_id=1, group_name='member')
 p.save()
@@ -31,7 +38,7 @@ p = UserData(user_name='bpickering', user_full_name='Beth Pickering', user_statu
 p.save()
 p = UserData(user_name='afox', user_full_name='Anthony Fox', user_status='logged_in', group_id=GroupData.objects.get(group_id=2))
 p.save()
-p = UserData(user_name='alastname', user_full_name='Ashley Lastname', user_status='logged_in', group_id=GroupData.objects.get(group_id=3))
+p = UserData(user_name='aprice', user_full_name='Ashley Price', user_status='logged_in', group_id=GroupData.objects.get(group_id=3))
 p.save()
 
 
@@ -72,6 +79,7 @@ p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.obj
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=12), vote='pro')
 
+vote_delay(vote_cycle)
 
 p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=1), vote='con')
 p.save()
@@ -93,10 +101,11 @@ p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.obj
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=10), vote='pro')
 p.save()
-p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=11), vote='pro')
+p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=11), vote='con')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=12), vote='pro')
 
+vote_delay(vote_cycle)
 
 p = VoteData(motion_id=MotionData.objects.get(motion_id=3), user_id=UserData.objects.get(user_id=1), vote='pro')
 p.save()
@@ -121,7 +130,9 @@ p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=3), user_id=UserData.objects.get(user_id=11), vote='pro')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=3), user_id=UserData.objects.get(user_id=12), vote='pro')
+p.save()
 
+vote_delay(vote_cycle)
 
 p = VoteData(motion_id=MotionData.objects.get(motion_id=4), user_id=UserData.objects.get(user_id=1), vote='pro')
 p.save()
@@ -146,3 +157,31 @@ p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=4), user_id=UserData.objects.get(user_id=11), vote='con')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=4), user_id=UserData.objects.get(user_id=12), vote='con')
+p.save()
+
+vote_delay(vote_cycle)
+
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=1), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=2), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=3), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=4), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=5), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=6), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=7), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=8), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=9), vote='con')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=10), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=11), vote='pro')
+p.save()
+p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=12), vote='pro')
+p.save()
