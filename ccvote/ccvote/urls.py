@@ -23,7 +23,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'main.views.home', name='home'),
-    url(r'^videooverlay$', 'main.views.videoOverlay', name='videoOverlay'),
+    url(r'^overlay$', 'main.views.videoOverlay', name='videoOverlay'),
 
     # Other examples for guidance:
     # url(r'^articles/(\d{4})/(\d{2})/(\d+)/$', 'news.views.article_detail')

@@ -1,5 +1,6 @@
 import logging
 import datetime
+import json
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -25,10 +26,68 @@ def home(request):
                               RequestContext(request))
 
 def videoOverlay(request):
-    videoDisplayData = {}
-    videoDisplayData['names'] = VoteTemp.objects.values('user_name')
-    videoDisplayData['nameAndVote'] = VoteTemp.objects.values('user_name').fil
-    return render_to_response('main/videoOverlay.html', videoDisplayData, RequestContext(request))
+    videoDisplayData = dict()
+    voterNames = dict()
+    voteCounts = dict()
+    visibilityAttrs = dict()
+    voteClasses = dict()
+    voteClass = str()
+    noCount = int()
+    yesCount = int()
+    for each in VoteTemp.objects.values('user_id').filter(user_id__lt = 13):
+        user_id = each['user_id']
+        record = VoteTemp.objects.get(user_id = each['user_id'])
+        if record.vote == '' or record.user_status == 'logged_out':
+            visibilityAttr = 'visibility:hidden'
+            voteClass = ''
+        else:            
+            visibilityAttr = ''
+            if str(record.vote) == 'con':
+                voteClass = 'noVote'
+                noCount += 1
+            else:
+                voteClass = 'yesVote'
+                yesCount += 1
+        voterNames.update({user_id:record.user_full_name})
+        visibilityAttrs.update({user_id:visibilityAttr + ';'})
+        voteClasses.update({user_id:voteClass})
+#         'visibilityAttr':visibilityAttr, 'voteClass':voteClass}})
+#    voteCounts.update({'yesCount':VoteTemp.objects.filter(vote = 'pro').count()})
+#    voteCounts.update({'noCount':VoteTemp.objects.filter(vote = 'con').count()})
+    voteCounts.update({'yesCount':yesCount, 'noCount':noCount})
+    voteCount = yesCount + noCount
+    if voteCount == 0:
+        visibilityAttrs.update({'legend':'visibility:hidden;'})
+    videoDisplayData['voterNames'] = voterNames
+    videoDisplayData['voteCounts'] = voteCounts
+    videoDisplayData['visibilityAttrs'] = visibilityAttrs
+    videoDisplayData['voteClasses'] = voteClasses
+    return render_to_response('main/overlay.html', videoDisplayData, RequestContext(request))
+
+def videoOverlayJson(request):
+    '''
+    return HttpResponse(str(lastModelChangeTime.objects.values('lastChangeTime').count()))
+    '''
+    '''
+    if lastModelChangeTime.objects.filter(modelName = 'VoteTemp').exists():
+        voteTempModelLastChangeTime = lastModelChangeTime.objects.get(modelName = 'VoteTemp').lastChangeTime
+    else:
+        voteTempModelLastChangeTime = 'empty'
+    return HttpResponse(voteTempModelLastChangeTime)
+    '''
+    '''
+    @receiver(main_signals.voteCast)
+    def(sender, **kwargs):
+    '''
+    voteTempRecordsList = []
+    for each in VoteTemp.objects.all():
+        voteTempRecordDict = {}
+        for each2 in each.__dict__:
+            if each2 is not '_state':
+                voteTempRecordDict.update({each2:each.__dict__[each2]})
+        voteTempRecordsList.append(voteTempRecordDict)
+    return HttpResponse(json.dumps(voteTempRecordsList))
+
 
 # Views for vote clients
 def VoteClientMinimal(request):

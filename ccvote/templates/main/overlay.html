@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>videoOverlay</title>
+  <link rel="stylesheet" href="/static/css/overlay.css">
+</head>
+<body>
+<!-- <span id="voteTempModelLastChangeTime">{% autoescape off %}{{ voteTempModelLastChangeTime }}{% endautoescape %}</span> -->
+<script type="text/javascript" src="/static/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="/static/js/refreshVideoOverlay.js"></script>
+
+<!-- <script type="text/javascript">
+</script> -->
+
+<div class="outerContainer">
+<div class="namecolumn">
+<div class="name {{ voteClasses.1 }}" style="{{ visibilityAttrs.1 }}">{{ voterNames.1 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.1 }}"><div class="no{{i}}">{{ voterNames.1 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.2 }}" style="{{ visibilityAttrs.2 }}">{{ voterNames.2 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.2 }}"><div class="no{{i}}">{{ voterNames.2 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.3 }}" style="{{ visibilityAttrs.3 }}">{{ voterNames.3 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.3 }}"><div class="no{{i}}">{{ voterNames.3 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.4 }}" style="{{ visibilityAttrs.4 }}">{{ voterNames.4 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.4 }}"><div class="no{{i}}">{{ voterNames.4 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.5 }}" style="{{ visibilityAttrs.5 }}">{{ voterNames.5 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.5 }}"><div class="no{{i}}">{{ voterNames.5 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.6 }}" style="{{ visibilityAttrs.6 }}">{{ voterNames.6 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.6 }}"><div class="no{{i}}">{{ voterNames.6 }}</div></div>
+{% endfor %}
+
+</div>
+
+<div class="namecolumn rightcolumn">
+
+<div class="name {{ voteClasses.7 }}" style="{{ visibilityAttrs.7 }}">{{ voterNames.7 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.7 }}"><div class="no{{i}}">{{ voterNames.7 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.8 }}" style="{{ visibilityAttrs.8 }}">{{ voterNames.8 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.8 }}"><div class="no{{i}}">{{ voterNames.8 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.9 }}" style="{{ visibilityAttrs.9 }}">{{ voterNames.9 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.9 }}"><div class="no{{i}}">{{ voterNames.9 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.10 }}" style="{{ visibilityAttrs.10 }}">{{ voterNames.10 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.10 }}"><div class="no{{i}}">{{ voterNames.10 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.11 }}" style="{{ visibilityAttrs.11 }}">{{ voterNames.11 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.11 }}"><div class="no{{i}}">{{ voterNames.11 }}</div></div>
+{% endfor %}
+
+<div class="name {{ voteClasses.12 }}" style="{{ visibilityAttrs.12 }}">{{ voterNames.12 }}</div>
+{% for i in '123456'|make_list %}
+<div class="name nameOutline" style="{{ visibilityAttrs.12 }}"><div class="no{{i}}">{{ voterNames.12 }}</div></div>
+{% endfor %}
+
+</div>
+
+<div id="legendCont" style="{{visibilityAttrs.legend}}">
+<div class="legendColumn">
+<div class="ynLegendCont">
+</span><span class="name yesVote yesLegendBackground roundedCorners">&nbsp;Yes&nbsp;</span>
+<div class="ynLegendCont yesLegendTextCont">
+{% for i in '123456'|make_list %}
+<div class="name nameOutline"><div class="no{{i}} Y{{i}}"><span class="yesTotalNumber">{{voteCounts.yesCount}}</span>&nbsp;&nbsp;Yes</div></div>
+{% endfor %}
+
+<div class="name nameOutline"><div class="legendYesInnerText"><span class="yesTotalNumber">{{voteCounts.yesCount}}</span>&nbsp;&nbsp;Yes&nbsp;</div></div>
+</div>
+</div>
+</div>
+
+<div class="legendColumn">
+<div class="ynLegendCont">
+<span class="name noVote noLegendBackground roundedCorners">&nbsp;No&nbsp;</span>
+<div class="ynLegendCont noLegendTextCont">
+{% for i in '123456'|make_list %}
+<div class="name nameOutline"><div class="no{{i}} N{{i}}"><span class="noTotalNumber">{{voteCounts.noCount}}</span>&nbsp;&nbsp;No</div></div>
+{% endfor %}
+
+<div class="name nameOutline"><div class="legendNoInnerText"><span class="noTotalNumber">{{voteCounts.noCount}}</span>&nbsp;&nbsp;No&nbsp;</div></div>
+</div>
+</div>
+</div>
+
+</div>
+
+
+</div>
+</body>
+</html>

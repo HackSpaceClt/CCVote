@@ -1,12 +1,15 @@
+#voteTempModelLastChangeTime {
+  display:none;
+}
 .outerContainer {
   padding:0 0 0 0;
   margin:0 0 0 0;
   height:430px;
   width:572px;
-  background-color:blue;
+/*  background-color:blue; */
   background-image:url('/static/img/cityCouncil2CroppedAndScaled.png');
 }
-.legendCont {
+#legendCont {
   position:relative;
   bottom:27px;
   height:30px;
@@ -22,24 +25,26 @@
 }
 .yesLegendTextCont {
   position:relative;
-  right:113px;
-  top:2px;
+  right:114px;
+  top:1px;
 }
 .noLegendTextCont {
   position:relative;
-  right:121px;
-  top:2px;
+  right:122px;
+  top:1px;
 }
 .yesTotalNumber {
   font-size:115%;
+  font-size:35px;
   position:relative;
-  top:2px;
-  right:1px;
+  top:3px;
+  right:2px;
 }
 .noTotalNumber {
   font-size:115%;
+  font-size:35px;
   position:relative;
-  top:2px;
+  top:3px;
   right:3px;
 }  
 .namecolumn {
@@ -88,6 +93,8 @@
   border-radius: 10px;
   behavior: url('PIE.htc');
 }
+
+
 .no1 {
   position:absolute;
   left:1px;
@@ -120,73 +127,92 @@
   bottom:23px;
 }
 
+/*
+.no1 {
+  position:absolute;
+  left:1px;
+  bottom:22px;
+}
+.no2 {
+  position:absolute;
+  left:2px;
+  bottom:22px;
+}
+
+.no3 {
+  position:absolute;
+  left:1px;
+  bottom:21px;
+}
+.no4 {
+  position:absolute;
+  left:-1px;
+  bottom:22px;
+}
+.no5 {
+  position:absolute;
+  left:-1px;
+  bottom:24px;
+}
+.no6 {
+  position:absolute;
+  left:1px;
+  bottom:24px;
+}
+*/
+
+
 .Y1 {
   left:87px;
   z-index:2;
-  bottom:21px;
 }
 .Y2 {
   left:89px;
   z-index:2;
-  bottom:21px;
 }
 .Y3 {
   left:88px;
   z-index:2;
-  bottom:20px;
 }
 .Y4 {
   left:86px;
   z-index:2;
-  bottom:21px;
 }
 .Y5 {
   left:87px;
   z-index:2;
-  bottom:23px;
 }
 .Y6 {
   left:89px;
   z-index:2;
-  bottom:23px;
 }
 
+
 .N1 {
-  left:97px;
-  bottom:21;
-  position:absolute;
+  left:95px;
   z-index:2;
 }
 .N2 {
-  left:96px;
-  bottom:21;
-  position:absolute;
+  left:97px;
   z-index:2;
 }
 .N3 {
-  left:95px;
-  bottom:20;
-  position:absolute;
+  left:96px;
   z-index:2;
 }
 .N4 {
   left:94px;
-  bottom:21;
-  position:absolute;
   z-index:2;
 }
 .N5 {
-  left:94px;
-  bottom:23;
-  position:absolute;
+  left:95px;
   z-index:2;
 }
 .N6 {
-  left:96px;
-  bottom:23;
-  position:absolute;
+  left:97px;
   z-index:2;
 }
+
 
 .yesVote {
   color:#00e800;
@@ -219,6 +245,7 @@
   position:relative;
   z-index:1;
 }
+/*
 .legendYesInnerText {
   color:#00e800;
   position:absolute;
@@ -226,6 +253,23 @@
   left:87px;
   bottom:22px;
 }
+*/
+.legendYesInnerText {
+  color:#00e800;
+  position:absolute;
+  z-index:3;
+  left:87px;
+  bottom:22px;
+}
+/*
+.legendNoInnerText {
+  color:#ff2020;
+  position:absolute;
+  z-index:3;
+  left:95px;
+  bottom:22px;
+}
+*/
 .legendNoInnerText {
   color:#ff2020;
   position:absolute;

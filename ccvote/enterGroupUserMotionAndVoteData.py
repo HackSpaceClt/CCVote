@@ -69,8 +69,6 @@ p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.obj
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=7), vote='pro')
 p.save()
-p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=8), vote='pro')
-p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=9), vote='con')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=10), vote='pro')
@@ -78,6 +76,7 @@ p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=11), vote='pro')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=1), user_id=UserData.objects.get(user_id=12), vote='pro')
+p.save()
 
 vote_delay(vote_cycle)
 
@@ -103,7 +102,6 @@ p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.obj
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=11), vote='con')
 p.save()
-p = VoteData(motion_id=MotionData.objects.get(motion_id=2), user_id=UserData.objects.get(user_id=12), vote='pro')
 
 vote_delay(vote_cycle)
 
@@ -128,8 +126,6 @@ p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=3), user_id=UserData.objects.get(user_id=10), vote='pro')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=3), user_id=UserData.objects.get(user_id=11), vote='pro')
-p.save()
-p = VoteData(motion_id=MotionData.objects.get(motion_id=3), user_id=UserData.objects.get(user_id=12), vote='pro')
 p.save()
 
 vote_delay(vote_cycle)
@@ -156,8 +152,6 @@ p = VoteData(motion_id=MotionData.objects.get(motion_id=4), user_id=UserData.obj
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=4), user_id=UserData.objects.get(user_id=11), vote='con')
 p.save()
-p = VoteData(motion_id=MotionData.objects.get(motion_id=4), user_id=UserData.objects.get(user_id=12), vote='con')
-p.save()
 
 vote_delay(vote_cycle)
 
@@ -168,8 +162,6 @@ p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=3), vote='pro')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=4), vote='pro')
-p.save()
-p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=5), vote='con')
 p.save()
 p = VoteData(motion_id=MotionData.objects.get(motion_id=5), user_id=UserData.objects.get(user_id=6), vote='con')
 p.save()
