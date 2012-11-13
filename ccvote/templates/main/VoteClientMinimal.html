@@ -201,7 +201,7 @@ $(document).ready( function() {
     <script LANGUAGE="JavaScript" type="text/javascript">
 
         function update_debug(debug_text) {
-            {% if debug %}
+            {% if debug == "1" %}
                 var debug_element = document.getElementById("debug_text");
                 var currentTime = new Date();
                 var hours = currentTime.getHours();

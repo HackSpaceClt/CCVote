@@ -6,61 +6,13 @@
 
 {% block content %}
 
-<table>
-{% for motion in current_meeting_motions %}
-<tr>
-{% comment %}
-  <td valign="top">
-    <img src="{{ STATIC_URL }}img/icon_copy.png" alt="Copy to clipboard"
-        height="30"
-        onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')">
-  </td>
-{% endcomment %}
-  <td>
-    <table><tr>
-    <td><h2>{{ motion.motion_description|title }}</h2></td>
-    <td>
-        &nbsp;
-        <img src="{{ STATIC_URL }}img/icon_copy_20x20.png"
-            alt="Copy to clipboard"
-            onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')"
-            name="copybutton-{{ motion.motion_id }}"
-            onMouseDown="copybutton_clicked('copybutton-{{ motion.motion_id }}')"
-            onMouseUp="copybutton_released('copybutton-{{ motion.motion_id }}')"
-            >
-    </td></tr></table>
-    {% with m_vote_objs=motion.votedata_set.all %}
-    {% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
-    <div id="copydiv-{{ motion.motion_id }}">
-        {% for votestatus in votestatus_list %}
-            <h3>
-            {% if votestatus.grouper == varname_for %}For:{% endif %}
-            {% if votestatus.grouper == varname_against %}Against:{% endif %}
-            </h3>
-            {% for vote_obj in votestatus.list %}
-                {% comment %}
-                    <!-- /sigh...  Stupid whitespace issue.... -->
-                {% if not forloop.first %}, {% endif %}
-                {{ vote_obj.user_id.user_full_name }}
-                {% endcomment %}
-                {% if not forloop.last %}
-                    {{ vote_obj.user_id.user_full_name }},
-                {% else %}
-                    {{ vote_obj.user_id.user_full_name }}
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-    </div>
-    {% endwith %}
-    <br /><br />
-  </td>
-</tr>
-{% endfor %}
-</table>
-
-<div id="hidden_div" style="position:fixed; top:-20%;"></div>
-
 <script type="text/javascript">
+
+var array_for = new Array();
+var array_against = new Array();
+var array_abstain = new Array();
+var array_novote = new Array();
+
 function copyToClipboard(element_to_copy) {
     var r = document.body.createTextRange();
     r.moveToElementText(document.getElementById(element_to_copy));
@@ -88,5 +40,68 @@ function copybutton_released(img_name) {
     }
 
 </script>
+
+<table>
+{% for motion in current_meeting_motions %}
+<tr>
+{% if copy_button_position == "left" %}
+  <!-- copy button on the left -->
+  <td valign="top">
+	<img src="{{ STATIC_URL }}img/icon_copy_20x20.png"
+		alt="Copy to clipboard"
+		onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')"
+		name="copybutton-{{ motion.motion_id }}"
+		onMouseDown="copybutton_clicked('copybutton-{{ motion.motion_id }}')"
+		onMouseUp="copybutton_released('copybutton-{{ motion.motion_id }}')"
+		>
+  </td>
+{% endif %}
+  <td>
+    <table><tr>
+    <td><h2>{{ motion.motion_description|title }}</h2></td>
+	{% if copy_button_position != "left" %}
+    <td>
+		<!-- copy button on the right -->
+        &nbsp;
+        <img src="{{ STATIC_URL }}img/icon_copy_20x20.png"
+            alt="Copy to clipboard"
+            onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')"
+            name="copybutton-{{ motion.motion_id }}"
+            onMouseDown="copybutton_clicked('copybutton-{{ motion.motion_id }}')"
+            onMouseUp="copybutton_released('copybutton-{{ motion.motion_id }}')"
+            >
+    </td>
+	{% endif %}
+	</tr></table>
+    {% with m_vote_objs=motion.votedata_set.all %}
+    {% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
+    <div id="copydiv-{{ motion.motion_id }}">
+        {% for votestatus in votestatus_list %}
+            <h3>
+            {% if votestatus.grouper == varname_for %}For:{% endif %}
+            {% if votestatus.grouper == varname_against %}Against:{% endif %}
+            </h3>
+            {% for vote_obj in votestatus.list %}
+                {% comment %}
+                    <!-- /sigh...  Stupid whitespace issue.... -->
+					{% if not forloop.first %}, {% endif %}
+					{{ vote_obj.user_id.user_full_name }}
+                {% endcomment %}
+                {% if not forloop.last %}
+                    {{ vote_obj.user_id.user_full_name }},
+                {% else %}
+                    {{ vote_obj.user_id.user_full_name }}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endwith %}
+    <br /><br />
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+<div id="hidden_div" style="position:fixed; top:-20%;"></div>
 
 {% endblock %}

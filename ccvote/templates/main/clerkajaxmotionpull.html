@@ -1,0 +1,23 @@
+{% with m_vote_objs=votes_in_motion %}
+{% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
+<div id="copydiv-{{ motion_id }}">
+    {% for votestatus in votestatus_list %}
+        <h3>
+        {% if votestatus.grouper == varname_for %}
+            For:
+        {% elif votestatus.grouper == varname_against %}
+            Against:
+        {% else %}
+            Other:
+        {% endif %}
+        </h3>
+        {% for vote_obj in votestatus.list %}
+            {% if not forloop.last %}
+                {{ vote_obj.user_id.user_full_name }},
+            {% else %}
+                {{ vote_obj.user_id.user_full_name }}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>
+{% endwith %}

@@ -329,6 +329,24 @@ class MeetingState:
         return local_votes
 
     @classmethod
+    def get_votes_by_motion_id(cls, sent_motion_id):
+        # returns a list of 'VoteData' objects (and related
+        # objects) associated with the passed id of a matching
+        # 'MotionData' object.
+        #
+        # If you call this and try to iterate through the
+        # returned 'VoteData's, you'll only see votes for
+        # people that've actually cast a vote.  If you want
+        # to see everybody that's logged in, use
+        # 'MeetingState.get_logged_in_users()'.
+        try:
+            local_votes = VoteData.objects.select_related().filter(
+                motion_id=sent_motion_id)
+        except ObjectDoesNotExist:
+            return False
+        return local_votes
+
+    @classmethod
     def get_logged_in_users(cls):
         # returns a list of 'UserData' objects
         try:
