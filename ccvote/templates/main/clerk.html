@@ -39,6 +39,25 @@ function copybutton_released(img_name) {
     document[img_name].src = copybutton_up.src
     }
 
+function update_all_motions() {
+    }
+
+function display_motion_votes(motion_id) {
+    jqaj_localchange = $.ajax({
+            url: '/clerk/ajax/motionpull/' + motion_id + '/',
+            dataType : 'html',
+            cache: false
+            })
+        .done( function(data) {
+            update_debug('Ajax load was performed. ' + data.message);
+            current_state = data.new_state;
+            })
+        .fail( function() {
+            update_debug("ajax call failed");
+            // set things back the way they were
+            set_state(old_state);
+            });
+    }
 </script>
 
 <table>

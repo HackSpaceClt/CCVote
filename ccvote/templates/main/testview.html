@@ -1,0 +1,29 @@
+<html>
+<body>
+{% for vote in votes %}
+  index is {{ forloop.counter }}
+  <br />
+  user is {{ vote.user_id.user_full_name }}
+  <br />
+  vote is {{ vote.vote }}
+{% endfor %}
+
+<br />
+<hr />
+<br />
+
+{% load listutil %}
+<h1>First column:</h1>
+<br />
+{% for vote in votes|partition:"2"|first %}
+    <div name="user-{{ vote.user_id }}">{{ vote.user_id.user_full_name }} voted {{ vote.vote }}</div>
+    <br />
+{% endfor %}
+<br /><br />
+
+<h1>Second column:</h1>
+<br />
+{% for vote in votes|partition:"2"|last %}
+    <div name="user-{{ vote.user_id }}">{{ vote.user_id.user_full_name }} voted {{ vote.vote }}</div>
+    <br />
+{% endfor %}

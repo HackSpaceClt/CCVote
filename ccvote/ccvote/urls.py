@@ -63,6 +63,8 @@ urlpatterns = patterns('',
     url(r'^clerk/?$', 'main.views.ClerkInterface', name="ClerkInterface"),
     url(r'^clerk/ajax/motionpull/(?P<motion_id>\w+)/?$', 'main.views.ClerkAjaxMotionPull', name="ClerkAjaxMotionPull"),
     
+    url(r'^test/?$', 'main.views.testview'),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

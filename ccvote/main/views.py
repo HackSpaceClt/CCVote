@@ -177,6 +177,11 @@ def ClerkAjaxMotionPull(request, motion_id):
     auth_template_vars(request, page_data)
     return render_to_response('main/clerkajaxmotionpull.html', page_data, RequestContext(request))
 
+def testview(request):
+    page_data = {}
+    page_data['votes'] = MeetingState.get_current_motion().votedata_set.all()
+    return render_to_response('main/testview.html', page_data, RequestContext(request))
+
 def logout(request):
     Security.logout(request)
     return redirect('/')
