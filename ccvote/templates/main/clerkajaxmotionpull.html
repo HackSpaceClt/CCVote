@@ -1,23 +1,81 @@
-{% with m_vote_objs=votes_in_motion %}
-{% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
-<div id="copydiv-{{ motion_id }}">
-    {% for votestatus in votestatus_list %}
-        <h3>
-        {% if votestatus.grouper == varname_for %}
-            For:
-        {% elif votestatus.grouper == varname_against %}
-            Against:
+<table>
+<tr>
+{% if copy_button_position == "left" %}
+  <!-- copy button on the left -->
+  <td valign="top">
+	<img src="{{ STATIC_URL }}img/blank_1x1.png"
+		alt="Copy to clipboard"
+        valign="center"
+        {% if copy_just_results == 1 %}
+            onclick="copyToClipboard('copy_div-{{ motion_id }}')"
         {% else %}
-            Other:
+            onclick="copyToClipboard('motion_container-{{ motion_id }}')"
         {% endif %}
-        </h3>
-        {% for vote_obj in votestatus.list %}
-            {% if not forloop.last %}
-                {{ vote_obj.user_id.user_full_name }},
+		name="copybutton-{{ motion_id }}"
+		onMouseDown="copybutton_clicked('copybutton-{{ motion_id }}')"
+		onMouseUp="copybutton_released('copybutton-{{ motion_id }}')"
+		>
+  </td>
+{% endif %}
+  <td>
+    <table><tr>
+    <td><h2>{{ motion_description|title }}</h2></td>
+	{% if copy_button_position != "left" %}
+    <td>
+        <!-- copy button on the right -->
+        &nbsp;
+        <img src="{{ STATIC_URL }}img/blank_1x1.png"
+            alt="Copy to clipboard"
+            {% if copy_just_results == "1" %}
+                onclick="copyToClipboard('copy_div-{{ motion_id }}')"
             {% else %}
-                {{ vote_obj.user_id.user_full_name }}
+                onclick="copyToClipboard('motion_container-{{ motion_id }}')"
+            {% endif %}
+            name="copybutton-{{ motion_id }}"
+            onMouseDown="copybutton_clicked('copybutton-{{ motion_id }}')"
+            onMouseUp="copybutton_released('copybutton-{{ motion_id }}')"
+            >
+    </td>
+	{% endif %}
+	</tr></table>
+    {% if motion_comment and motion_comment.strip %}
+        {% comment %}
+            <!-- putting this in a table to make it 'copy' the same as the
+                header -->
+        {% endcomment %}
+        <table><tr><td>
+        <h3>{{ motion_comment }}</h3>
+        </td></tr></table>
+    {% endif %}
+    <div id="copy_div-{{ motion_id }}">
+        <h4>For:</h4>
+        {% for voter in voters_for %}
+            {% if not forloop.last %}
+                {{ voter }},
+            {% else %}
+                {{ voter }}
             {% endif %}
         {% endfor %}
-    {% endfor %}
-</div>
-{% endwith %}
+        <h4>Against:</h4>
+        {% for voter in voters_against %}
+            {% if not forloop.last %}
+                {{ voter }},
+            {% else %}
+                {{ voter }}
+            {% endif %}
+        {% endfor %}
+        {% if ungroup_other_votes == "1" %}
+            <h4>Other:</h4>
+            {% for voter in voters_other %}
+                {% if not forloop.last %}
+                    {{ voter }},
+                {% else %}
+                    {{ voter }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    <br /><br />
+  </td>
+</tr>
+</table>
