@@ -1,23 +1,131 @@
-{% with m_vote_objs=votes_in_motion %}
-{% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
-<div id="copydiv-{{ motion_id }}">
-    {% for votestatus in votestatus_list %}
-        <h3>
-        {% if votestatus.grouper == varname_for %}
-            For:
-        {% elif votestatus.grouper == varname_against %}
-            Against:
+{% if copy_window == "1" %}
+<html>
+<head>
+<title>To Be Copied</title>
+<script src="/static/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript">
+function selectText(element) {
+    var doc = document
+        , text = doc.getElementById(element)
+        , range, selection
+        ;    
+    if (doc.body.createTextRange) { //ms
+        range = doc.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) { //all others
+        selection = window.getSelection();        
+        range = doc.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        }
+    }
+
+function setTitle(title) {
+    // doing it twice 'cause.. it...  doesn't update at first?
+    document.title = title;
+    }
+// things to run when the document's ready...
+$(document).ready( function() {
+    {% if copy_just_results == 1 %}
+        selectText('copy_div-{{ motion_id }}');
+    {% else %}
+        selectText('motion_container-{{ motion_id }}');
+    {% endif %}
+
+    setTitle("copy-me-to-clerk-soft");
+    });
+</script>
+</head>
+<body>
+<div id="motion_container-{{ motion_id }}">
+{% endif %}
+
+<table>
+<tr>
+{% if copy_button_position == "left" %}
+  <!-- copy button on the left -->
+  <td valign="top">
+	<img src="{{ STATIC_URL }}img/blank_1x1.png"
+		alt="Copy to clipboard"
+        valign="center"
+        {% if copy_just_results == 1 %}
+            onclick="copyToClipboard('{{ motion_id }}')"
         {% else %}
-            Other:
+            onclick="copyToClipboard('{{ motion_id }}')"
         {% endif %}
-        </h3>
-        {% for vote_obj in votestatus.list %}
-            {% if not forloop.last %}
-                {{ vote_obj.user_id.user_full_name }},
+		name="copybutton-{{ motion_id }}"
+		onMouseDown="copybutton_clicked('copybutton-{{ motion_id }}')"
+		onMouseUp="copybutton_released('copybutton-{{ motion_id }}')"
+		>
+  </td>
+{% endif %}
+  <td>
+    <table><tr>
+    <td><h2>{{ motion_description|title }}</h2></td>
+	{% if copy_button_position != "left" %}
+    <td>
+        <!-- copy button on the right -->
+        &nbsp;
+        <img src="{{ STATIC_URL }}img/blank_1x1.png"
+            alt="Copy to clipboard"
+            {% if copy_just_results == "1" %}
+                onclick="copyToClipboard('{{ motion_id }}')"
             {% else %}
-                {{ vote_obj.user_id.user_full_name }}
+                onclick="copyToClipboard('{{ motion_id }}')"
+            {% endif %}
+            name="copybutton-{{ motion_id }}"
+            onMouseDown="copybutton_clicked('copybutton-{{ motion_id }}')"
+            onMouseUp="copybutton_released('copybutton-{{ motion_id }}')"
+            >
+    </td>
+	{% endif %}
+	</tr></table>
+    {% if motion_comment and motion_comment.strip %}
+        {% comment %}
+            <!-- putting this in a table to make it 'copy' the same as the
+                header -->
+        {% endcomment %}
+        <table><tr><td>
+        <h3>{{ motion_comment }}</h3>
+        </td></tr></table>
+    {% endif %}
+    <div id="copy_div-{{ motion_id }}">
+        <h4>For:</h4>
+        {% for voter in voters_for %}
+            {% if not forloop.last %}
+                {{ voter }},
+            {% else %}
+                {{ voter }}
             {% endif %}
         {% endfor %}
-    {% endfor %}
+        <h4>Against:</h4>
+        {% for voter in voters_against %}
+            {% if not forloop.last %}
+                {{ voter }},
+            {% else %}
+                {{ voter }}
+            {% endif %}
+        {% endfor %}
+        {% if ungroup_other_votes == "1" %}
+            <h4>Other:</h4>
+            {% for voter in voters_other %}
+                {% if not forloop.last %}
+                    {{ voter }},
+                {% else %}
+                    {{ voter }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    <br /><br />
+  </td>
+</tr>
+</table>
+
+{% if copy_window == "1" %}
 </div>
-{% endwith %}
+</body>
+</html>
+{% endif %}

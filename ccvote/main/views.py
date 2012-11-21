@@ -164,6 +164,7 @@ def VoteClientAjaxLongPoll(request):
 # main clerk interface
 def ClerkInterface(request):
     incoming_data = request.REQUEST
+    image_size_specified = 0
     page_data = {}
     page_data['project_name'] = 'Clerk Interface'
     page_data['user_name'] = Security.get_user_name(request)
@@ -172,9 +173,28 @@ def ClerkInterface(request):
     page_data['varname_for'] = "pro"
     page_data['varname_against'] = "con"
     try:
+        page_data['copy_just_results'] = incoming_data['copy_just_results']
+    except:
+        page_data['copy_just_results'] = "0"
+    try:
+        page_data['ungroup_other_votes'] = incoming_data['ungroup_other_votes']
+    except:
+        page_data['ungroup_other_votes'] = "0"
+    try:
+        page_data['debug'] = incoming_data['debug']
+    except:
+        page_data['debug'] = '0'
+    try:
+        page_data['image_size'] = incoming_data['image_size']
+        image_size_specified = 1
+    except:
+        page_data['image_size'] = "large"
+    try:
         page_data['copy_button_position'] = incoming_data['copy_button_position']
     except:
         page_data['copy_button_position'] = "right"
+        if not image_size_specified:
+            page_data['image_size'] = "small"
     auth_template_vars(request, page_data)
     return render_to_response('main/clerk.html', page_data, RequestContext(request))
 
@@ -194,19 +214,60 @@ def ClerkAjax(request):
     response_data = {}
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 
+# ajax handler for clerk polling of current motions
+def ClerkAjaxCurrentMotionIds(request):
+    current_motions = MeetingState.get_current_meeting_motions()
+    incoming_data = request.REQUEST
+    response_data = {}
+    response_data['current_motion_ids'] = []
+    for motion in current_motions:
+        response_data['current_motion_ids'].append(motion.motion_id)
+    return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+
 # ajax handler to render insides of each motion
 def ClerkAjaxMotionPull(request, motion_id):
     incoming_data = request.REQUEST
+    votes_in_motion = MeetingState.get_votes_by_motion_id(motion_id)
     page_data = {}
     page_data['request'] = request
     page_data['motion_id'] = motion_id
     page_data['varname_for'] = "pro"
     page_data['varname_against'] = "con"
-    page_data['votes_in_motion'] = MeetingState.get_votes_by_motion_id(motion_id)
+    # Commenting as I think it's probably extraneous....
+    # page_data['votes_in_motion'] = votes_in_motion
+    page_data['voters_for'] = []
+    page_data['voters_against'] = []
+    page_data['voters_other'] = []
+    page_data['motion_description'] = votes_in_motion[0].motion_id.motion_description
+    page_data['motion_comment'] = votes_in_motion[0].motion_id.motion_comment
+    for vote in filter(lambda x: x.vote == "pro", votes_in_motion):
+        page_data['voters_for'].append(vote.user_id.user_full_name)
+    for vote in filter(lambda x: x.vote == "con", votes_in_motion):
+        page_data['voters_against'].append(vote.user_id.user_full_name)
+    try:
+        page_data['ungroup_other_votes'] = incoming_data['ungroup_other_votes']
+    except:
+        page_data['ungroup_other_votes'] = "0"
+    if page_data['ungroup_other_votes'] == "0":
+        # Append not pro/con votes to the 'for' group but encapsulated
+        # in asterisks -- *<name>*
+        for vote in filter(lambda x: x.vote != "pro" and x.vote != "con", votes_in_motion):
+            page_data['voters_for'].append(''.join(["*", vote.user_id.user_full_name, "*"]))
+    else:
+        for vote in filter(lambda x: x.vote != "pro" and x.vote != "con", votes_in_motion):
+            page_data['voters_other'].append(vote.user_id.user_full_name)
     try:
         page_data['copy_button_position'] = incoming_data['copy_button_position']
     except:
         page_data['copy_button_position'] = "right"
+    try:
+        page_data['copy_just_results'] = incoming_data['copy_just_results']
+    except:
+        page_data['copy_just_results'] = "0"
+    try:
+        page_data['copy_window'] = incoming_data['copy_window']
+    except:
+        page_data['copy_window'] = "0"
     auth_template_vars(request, page_data)
     return render_to_response('main/clerkajaxmotionpull.html', page_data, RequestContext(request))
 

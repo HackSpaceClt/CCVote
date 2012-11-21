@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
+{% comment %}
+    <!-- I need jquery loaded earlier, but since I'm extending base_page, it
+        technically gets loaded twice...  Dare I care?  Hmmm....
+    -->
+{% endcomment %}
+<script src="/static/js/jquery-1.8.1.min.js"></script>
 
 <script type="text/javascript">
 
@@ -13,114 +19,123 @@ var array_against = new Array();
 var array_abstain = new Array();
 var array_novote = new Array();
 
-function copyToClipboard(element_to_copy) {
-    var r = document.body.createTextRange();
-    r.moveToElementText(document.getElementById(element_to_copy));
-    r.select();  
-    r.execCommand("Copy");
-
-    // deselect, so the browser doesn't leave the element visibly selected
-    r.moveToElementText(document.getElementById('hidden_div'));
-    r.select();
-    }
-
 if (document.images) {
     var copybutton_up = new Image();
-    copybutton_up.src = "{{ STATIC_URL }}img/icon_copy_20x20.png";
     var copybutton_down = new Image();
-    copybutton_down.src = "{{ STATIC_URL }}img/icon_copy_inv_20x20.png";
+    // image_size is {{ image_size }}.
+    {% if image_size == "small" %}
+        copybutton_up.src = "{{ STATIC_URL }}img/icon_copy_20x20.png";
+        copybutton_down.src = "{{ STATIC_URL }}img/icon_copy_inv_20x20.png";
+    {% else %}
+        copybutton_up.src = "{{ STATIC_URL }}img/icon_copy.png";
+        copybutton_down.src = "{{ STATIC_URL }}img/icon_copy_inv.png";
+    {% endif %}
+    }
+
+function copyToClipboard(motion_id) {
+    CopyWindowPopup('/clerk/ajax/motionpull/' + motion_id + '/?copy_window=1','','800','300','10','10');
+    }
+
+function CopyWindowPopup(url,windowname,w,h,x,y){
+    // called like "CopyWindowPopup('Voter.php','','300','300','10','300')"
+    window.open(url,windowname,"width="+w+",height="+h+",left="+x+",top="+y+"");
     }
 
 function copybutton_clicked(img_name) {
-    document[img_name].src = copybutton_down.src
+    document[img_name].src = copybutton_down.src;
     }
 
 function copybutton_released(img_name) {
-    document[img_name].src = copybutton_up.src
+    document[img_name].src = copybutton_up.src;
     }
 
 function update_all_motions() {
+	jqaj_localchange = $.ajax({
+		url: '/clerk/ajax/currentmotionids/',
+		dataType : 'json',
+		cache: false
+		})
+	.done( function(data) {
+		var all_motions_container = $('#all_motions_container');
+		var current_ids = data.current_motion_ids;
+		update_debug('update_all_motions Ajax load was performed: \
+			' + data.current_motion_ids);
+
+		// Clear the current all_motions_container
+		all_motions_container.html("");
+		for (var i=0;i<current_ids.length;i++) {
+			// Create a div for the motion in the container
+			$('<div />', {
+                id: 'motion_container-' + current_ids[i]
+                }).appendTo(all_motions_container);
+			// Update that new motion/div
+			update_motion_info(current_ids[i]);
+			}
+		})
+	.fail( function() {
+		update_debug("update_all_motions ajax call failed");
+		});
     }
 
-function display_motion_votes(motion_id) {
+function update_motion_info(motion_id) {
     jqaj_localchange = $.ajax({
             url: '/clerk/ajax/motionpull/' + motion_id + '/',
             dataType : 'html',
-            cache: false
+            cache: false,
+            data:   {
+                    ungroup_other_votes: '{{ ungroup_other_votes }}',
+                    copy_button_position: '{{ copy_button_position }}',
+                    copy_just_results: '{{ copy_just_results }}'
+                    }
             })
         .done( function(data) {
-            update_debug('Ajax load was performed. ' + data.message);
-            current_state = data.new_state;
+			var motion_container = $('#motion_container-' + motion_id)
+            update_debug('Ajax load of motion ' + motion_id + ' \
+				was performed: <br />' + data);
+            motion_container.html(data);
+            // reset button image
+            copybutton_released('copybutton-' + motion_id)
             })
         .fail( function() {
-            update_debug("ajax call failed");
-            // set things back the way they were
-            set_state(old_state);
+            update_debug("update_motion_info ajax call failed");
             });
     }
+
+function update_debug(debug_text) {
+	{% if debug == "1" %}
+		var debug_element = document.getElementById("debug_text");
+		var currentTime = new Date();
+		var hours = currentTime.getHours();
+		var minutes = currentTime.getMinutes();
+		var seconds = currentTime.getSeconds();
+		if (minutes < 10){
+			minutes = "0" + minutes
+			}
+		if (seconds < 10){
+			seconds = "0" + seconds
+			}
+		var time = hours + ":" + minutes + ":" + seconds;
+		debug_element.innerHTML += "<br />" + time + " - " + debug_text;
+	{% endif %}
+	}
+
+// things to run when the document's ready...
+$(document).ready( function() {
+    update_debug("entering document.ready");
+    update_all_motions();
+    //update_debug("getting ready to call long_poller");
+    //long_poller();
+    });
 </script>
 
-<table>
-{% for motion in current_meeting_motions %}
-<tr>
-{% if copy_button_position == "left" %}
-  <!-- copy button on the left -->
-  <td valign="top">
-	<img src="{{ STATIC_URL }}img/icon_copy_20x20.png"
-		alt="Copy to clipboard"
-		onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')"
-		name="copybutton-{{ motion.motion_id }}"
-		onMouseDown="copybutton_clicked('copybutton-{{ motion.motion_id }}')"
-		onMouseUp="copybutton_released('copybutton-{{ motion.motion_id }}')"
-		>
-  </td>
-{% endif %}
-  <td>
-    <table><tr>
-    <td><h2>{{ motion.motion_description|title }}</h2></td>
-	{% if copy_button_position != "left" %}
-    <td>
-		<!-- copy button on the right -->
-        &nbsp;
-        <img src="{{ STATIC_URL }}img/icon_copy_20x20.png"
-            alt="Copy to clipboard"
-            onclick="copyToClipboard('copydiv-{{ motion.motion_id }}')"
-            name="copybutton-{{ motion.motion_id }}"
-            onMouseDown="copybutton_clicked('copybutton-{{ motion.motion_id }}')"
-            onMouseUp="copybutton_released('copybutton-{{ motion.motion_id }}')"
-            >
-    </td>
-	{% endif %}
-	</tr></table>
-    {% with m_vote_objs=motion.votedata_set.all %}
-    {% regroup m_vote_objs|dictsortreversed:"vote" by vote as votestatus_list %}
-    <div id="copydiv-{{ motion.motion_id }}">
-        {% for votestatus in votestatus_list %}
-            <h3>
-            {% if votestatus.grouper == varname_for %}For:{% endif %}
-            {% if votestatus.grouper == varname_against %}Against:{% endif %}
-            </h3>
-            {% for vote_obj in votestatus.list %}
-                {% comment %}
-                    <!-- /sigh...  Stupid whitespace issue.... -->
-					{% if not forloop.first %}, {% endif %}
-					{{ vote_obj.user_id.user_full_name }}
-                {% endcomment %}
-                {% if not forloop.last %}
-                    {{ vote_obj.user_id.user_full_name }},
-                {% else %}
-                    {{ vote_obj.user_id.user_full_name }}
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-    </div>
-    {% endwith %}
-    <br /><br />
-  </td>
-</tr>
-{% endfor %}
-</table>
+<div id="all_motions_container" />
 
 <div id="hidden_div" style="position:fixed; top:-20%;"></div>
+
+{% if debug == 1 %}
+    <br />
+    <div id=debug_text />
+{% endif %}
+
 
 {% endblock %}
