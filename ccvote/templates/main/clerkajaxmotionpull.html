@@ -1,3 +1,47 @@
+{% if copy_window == "1" %}
+<html>
+<head>
+<title>To Be Copied</title>
+<script src="/static/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript">
+function selectText(element) {
+    var doc = document
+        , text = doc.getElementById(element)
+        , range, selection
+        ;    
+    if (doc.body.createTextRange) { //ms
+        range = doc.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) { //all others
+        selection = window.getSelection();        
+        range = doc.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        }
+    }
+
+function setTitle(title) {
+    // doing it twice 'cause.. it...  doesn't update at first?
+    document.title = title;
+    }
+// things to run when the document's ready...
+$(document).ready( function() {
+    {% if copy_just_results == 1 %}
+        selectText('copy_div-{{ motion_id }}');
+    {% else %}
+        selectText('motion_container-{{ motion_id }}');
+    {% endif %}
+
+    setTitle("copy-me-to-clerk-soft");
+    });
+</script>
+</head>
+<body>
+<div id="motion_container-{{ motion_id }}">
+{% endif %}
+
 <table>
 <tr>
 {% if copy_button_position == "left" %}
@@ -7,9 +51,9 @@
 		alt="Copy to clipboard"
         valign="center"
         {% if copy_just_results == 1 %}
-            onclick="copyToClipboard('copy_div-{{ motion_id }}')"
+            onclick="copyToClipboard('{{ motion_id }}')"
         {% else %}
-            onclick="copyToClipboard('motion_container-{{ motion_id }}')"
+            onclick="copyToClipboard('{{ motion_id }}')"
         {% endif %}
 		name="copybutton-{{ motion_id }}"
 		onMouseDown="copybutton_clicked('copybutton-{{ motion_id }}')"
@@ -27,9 +71,9 @@
         <img src="{{ STATIC_URL }}img/blank_1x1.png"
             alt="Copy to clipboard"
             {% if copy_just_results == "1" %}
-                onclick="copyToClipboard('copy_div-{{ motion_id }}')"
+                onclick="copyToClipboard('{{ motion_id }}')"
             {% else %}
-                onclick="copyToClipboard('motion_container-{{ motion_id }}')"
+                onclick="copyToClipboard('{{ motion_id }}')"
             {% endif %}
             name="copybutton-{{ motion_id }}"
             onMouseDown="copybutton_clicked('copybutton-{{ motion_id }}')"
@@ -79,3 +123,9 @@
   </td>
 </tr>
 </table>
+
+{% if copy_window == "1" %}
+</div>
+</body>
+</html>
+{% endif %}

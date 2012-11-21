@@ -32,19 +32,13 @@ if (document.images) {
     {% endif %}
     }
 
-function copyToClipboard(element_to_copy) {
-    var r = document.body.createTextRange();
-    r.moveToElementText(document.getElementById(element_to_copy));
-    r.select();  
-    r.execCommand("Copy");
-
-    // deselect, so the browser doesn't leave the element visibly selected
-    r.moveToElementText(document.getElementById('hidden_div'));
-    r.select();
+function copyToClipboard(motion_id) {
+    CopyWindowPopup('/clerk/ajax/motionpull/' + motion_id + '/?copy_window=1','','800','300','10','10');
     }
 
 function CopyWindowPopup(url,windowname,w,h,x,y){
-      window.open(url,windowname,"resizable=no,toolbar=no,scrollbars=no,menubar=no,status=no,directories=no,width="+w+",height="+h+",left="+x+",top="+y+"");
+    // called like "CopyWindowPopup('Voter.php','','300','300','10','300')"
+    window.open(url,windowname,"width="+w+",height="+h+",left="+x+",top="+y+"");
     }
 
 function copybutton_clicked(img_name) {

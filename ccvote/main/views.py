@@ -231,6 +231,10 @@ def ClerkAjaxMotionPull(request, motion_id):
         page_data['copy_just_results'] = incoming_data['copy_just_results']
     except:
         page_data['copy_just_results'] = "0"
+    try:
+        page_data['copy_window'] = incoming_data['copy_window']
+    except:
+        page_data['copy_window'] = "0"
     auth_template_vars(request, page_data)
     return render_to_response('main/clerkajaxmotionpull.html', page_data, RequestContext(request))
 
