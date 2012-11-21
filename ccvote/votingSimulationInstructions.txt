@@ -1,0 +1,14 @@
+make sure you are in the CCvote/ccvote directory (where this file lives).
+
+Start the test server and open 127.0.0.1:8000/overlay in your browser.
+
+if you are on linux:
+DJANGO_SETTINGS_MODULE=ccvote.settings
+export DJANGO_SETTINGS_MODULE
+python votingSimulation.py
+or
+cat votingSimulation.py | ./manage.py shell
+
+if you are on windows:
+set DJANGO_SETTINGS_MODULE=ccvote.settings
+python votingSimulation
