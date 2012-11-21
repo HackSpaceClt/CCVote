@@ -34,26 +34,44 @@ def videoOverlay(request):
     voteClass = str()
     noCount = int()
     yesCount = int()
-    for each in VoteTemp.objects.values('user_id').filter(user_id__lt = 13):
-        user_id = each['user_id']
-        record = VoteTemp.objects.get(user_id = each['user_id'])
-        if record.vote == '' or record.user_status == 'logged_out':
+    voter_count = 1
+    user_status_dict = dict()
+    user_vote_dict = dict()
+    user_group_dict = dict()
+    user_first_and_last_name_dict = dict()
+    for each in MeetingState.get_users_can_vote().order_by('user_last_name').values('user_id', 'user_status', 'user_first_name', 'user_last_name', 'group_id'):
+        user_status_dict.update({each['user_id']:each['user_status']})
+        user_group_dict.update({each['user_id']:each['group_id']})
+        user_first_and_last_name_dict.update({each['user_id']:{'user_first_name':each['user_first_name'], 'user_last_name':each['user_last_name']}})
+    for each in MeetingState.get_current_motion().votedata_set.values('user_id', 'vote'):
+        user_vote_dict.update({each['user_id']:each['vote']})
+    for each in user_status_dict:
+        if user_status_dict[each] == 'logged_in':
+            if each in user_vote_dict:
+                visibilityAttr = ''
+                if user_vote_dict[each] == 'con':
+                    voteClass = 'noVote'
+                    noCount += 1
+                else:
+                    voteClass = 'yesVote'
+                    yesCount += 1
+            else:
+                visibilityAttr = ''
+                voteClass = 'lackingVote'
+        else:
             visibilityAttr = 'visibility:hidden'
             voteClass = ''
-        else:            
-            visibilityAttr = ''
-            if str(record.vote) == 'con':
-                voteClass = 'noVote'
-                noCount += 1
-            else:
-                voteClass = 'yesVote'
-                yesCount += 1
-        voterNames.update({user_id:record.user_full_name})
-        visibilityAttrs.update({user_id:visibilityAttr + ';'})
-        voteClasses.update({user_id:voteClass})
-#         'visibilityAttr':visibilityAttr, 'voteClass':voteClass}})
-#    voteCounts.update({'yesCount':VoteTemp.objects.filter(vote = 'pro').count()})
-#    voteCounts.update({'noCount':VoteTemp.objects.filter(vote = 'con').count()})
+        if user_group_dict[each] == 1:
+            voterNames.update({voter_count:user_first_and_last_name_dict[each]['user_first_name'] + ' ' + user_first_and_last_name_dict[each]['user_last_name']})
+            visibilityAttrs.update({voter_count:visibilityAttr})
+            voteClasses.update({voter_count:voteClass})
+        elif user_group_dict[each] == 2:
+            voterNames.update({'12':user_first_and_last_name_dict[each]['user_first_name'] + ' ' + user_first_and_last_name_dict[each]['user_last_name']})
+            visibilityAttrs.update({'12':visibilityAttr + ';'})
+            voteClasses.update({'12':voteClass})
+            voter_count -= 1
+        voter_count += 1
+
     voteCounts.update({'yesCount':yesCount, 'noCount':noCount})
     voteCount = yesCount + noCount
     if voteCount == 0:
@@ -76,18 +94,33 @@ def videoOverlayJson(request):
     return HttpResponse(voteTempModelLastChangeTime)
     '''
     '''
-    @receiver(main_signals.voteCast)
-    def(sender, **kwargs):
+    @receiver(main_signals.vote_cast_signal)
+    def vote_signal_receiver(sender, **kwargs):
     '''
-    voteTempRecordsList = []
-    for each in VoteTemp.objects.all():
-        voteTempRecordDict = {}
-        for each2 in each.__dict__:
-            if each2 is not '_state':
-                voteTempRecordDict.update({each2:each.__dict__[each2]})
-        voteTempRecordsList.append(voteTempRecordDict)
-    return HttpResponse(json.dumps(voteTempRecordsList))
+    recordsList = []
+    users_and_votes_dict = dict()
+    users_and_votes_dict2 = dict()
+    users_and_votes_list = []
+    for each in MeetingState.get_users_can_vote().order_by('user_last_name').values('user_id', 'user_first_name', 'user_last_name', 'user_status'):
+        users_and_votes_dict.update({each['user_id']:{'user_first_name':each['user_first_name'], 'user_last_name':each['user_last_name'], 'user_status':each['user_status']}})
+    # add votes to users_and_votes_dict
+    for each in MeetingState.get_current_motion().votedata_set.values('user_id', 'vote'):
+        users_and_votes_dict[each['user_id']].update({'vote':each['vote']})
+    # replace user_id key with voter_count key so can create javascript array to loop through on page
+    voter_count = 1
+    '''
+    for each in users_and_votes_dict:
+        users_and_votes_dict2[voter_count] = users_and_votes_dict[each]
+        voter_count += 1
+    '''
+    for each in users_and_votes_dict:
+        users_and_votes_list.append(users_and_votes_dict[each])
+#    return HttpResponse(json.dumps(users_and_votes_dict2))
+#    sleep(3)
+    return HttpResponse(json.dumps(users_and_votes_list))
 
+#    vote_signal_receiver(None)
+    
 
 # Views for vote clients
 def VoteClientMinimal(request):

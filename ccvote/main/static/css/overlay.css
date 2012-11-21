@@ -221,6 +221,10 @@
   z-index:3;
   color:#ff2020;
 }
+.lackingVote {
+  color:#8a8a8a;
+  color:#989898;
+}
 .legendHalf {
   width:50%;
   float:left;

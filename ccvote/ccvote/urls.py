@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'main.views.home', name='home'),
     url(r'^overlay$', 'main.views.videoOverlay', name='videoOverlay'),
+    url(r'^overlay.json$', 'main.views.videoOverlayJson', name='videoOverlayJson'),
 
     # Other examples for guidance:
     # url(r'^articles/(\d{4})/(\d{2})/(\d+)/$', 'news.views.article_detail')

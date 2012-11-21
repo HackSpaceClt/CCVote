@@ -73,6 +73,10 @@ class UserData(models.Model):
             'User login name', max_length=20, unique=True, db_column='userName')
     user_full_name = models.CharField(
             'User full name', max_length=120, db_column='userFullName')
+    user_first_name = models.CharField(
+            'User first name', max_length=60, db_column='userFirstName')
+    user_last_name = models.CharField(
+            'User last name', max_length=60, db_column='userLastName')
     # salt is embedded in the field: salt(16) + sha256(64)
     user_pwhash = models.CharField(
             'Password hash', max_length=80, db_column='userPwHash')

@@ -356,6 +356,15 @@ class MeetingState:
         return local_users
 
     @classmethod
+    def get_users_can_vote(cls):
+        # returns a list of 'UserData' objects
+        try:
+            local_users = UserData.objects.filter(models.Q(group_id=1)|models.Q(group_id=2))
+        except ObjectDoesNotExist:
+            return False
+        return local_users
+
+    @classmethod
     def get_current_meeting_motions(cls):
         # returns a list of 'MotionData's with the same
         # meeting_id as...  oh wait, we don't have that yet.

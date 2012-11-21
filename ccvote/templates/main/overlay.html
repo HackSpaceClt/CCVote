@@ -7,7 +7,7 @@
 <body>
 <!-- <span id="voteTempModelLastChangeTime">{% autoescape off %}{{ voteTempModelLastChangeTime }}{% endautoescape %}</span> -->
 <script type="text/javascript" src="/static/js/jquery-1.8.1.min.js"></script>
-<script type="text/javascript" src="/static/js/refreshVideoOverlay.js"></script>
+<script type="text/javascript" src="/static/js/refreshoverlay.js"></script>
 
 <!-- <script type="text/javascript">
 </script> -->
@@ -83,7 +83,7 @@
 <div id="legendCont" style="{{visibilityAttrs.legend}}">
 <div class="legendColumn">
 <div class="ynLegendCont">
-</span><span class="name yesVote yesLegendBackground roundedCorners">&nbsp;Yes&nbsp;</span>
+<span class="name yesVote yesLegendBackground roundedCorners">&nbsp;Yes&nbsp;</span>
 <div class="ynLegendCont yesLegendTextCont">
 {% for i in '123456'|make_list %}
 <div class="name nameOutline"><div class="no{{i}} Y{{i}}"><span class="yesTotalNumber">{{voteCounts.yesCount}}</span>&nbsp;&nbsp;Yes</div></div>
