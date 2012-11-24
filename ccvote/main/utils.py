@@ -377,5 +377,16 @@ class MeetingState:
         return MotionData.objects.select_related().order_by(
             'motion_vote_start').reverse()[:5]
 
+    @classmethod
+    def meeting_has_changed(cls, date_time):
+        # Return True if the meeting has changed since
+        #     the passed time
+        # Return False if nothing's changed
+        latest_vote = VoteData.objects.order_by('vote_time').reverse()[0]
+        if latest_vote.vote_time > date_time:
+            return True
+        else:
+            return False
+
 
 # vim: set sts=4 sw=4 expandtab:

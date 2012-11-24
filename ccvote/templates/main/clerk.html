@@ -90,8 +90,10 @@ function update_motion_info(motion_id) {
             })
         .done( function(data) {
 			var motion_container = $('#motion_container-' + motion_id)
+            //update_debug('Ajax load of motion ' + motion_id + ' \
+			//	was performed: <br />"' + data);
             update_debug('Ajax load of motion ' + motion_id + ' \
-				was performed: <br />' + data);
+				was performed');
             motion_container.html(data);
             // reset button image
             copybutton_released('copybutton-' + motion_id)
@@ -104,15 +106,18 @@ function update_motion_info(motion_id) {
 function long_poller() {
     update_debug("entering long_poller");
     jqaj_longpoll = $.ajax({
-                url: '/voteclient/longpoll',
+                url: '/clerk/ajax/longpoll',
                 dataType : 'json',
-                cache: false
+                cache: false,
+                data:   {
+                        latest_something: 'to be figured out'
+                        }
                 })
         .done( function(data) {
-            update_debug('Load was performed from long_poller. ' + data.message);
-            if ( current_state != data.new_state ) {
-                update_debug("setting new state from long_poller");
-                set_state(data.new_state);
+            update_debug('Load was performed from long_poller. ' + data.meeting_changed);
+            if ( data.meeting_changed == "1" ) {
+                update_debug("meeting changed - refreshing");
+                update_all_motions();
                 }
             })
         // .fail apparently also gets called when you navigate away from the
@@ -134,8 +139,8 @@ function long_poller() {
 $(document).ready( function() {
     update_debug("entering document.ready");
     update_all_motions();
-    //update_debug("getting ready to call long_poller");
-    //long_poller();
+    update_debug("calling long_poller");
+    long_poller();
     });
 </script>
 

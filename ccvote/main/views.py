@@ -200,10 +200,19 @@ def ClerkInterface(request):
 
 # long poll handler for clerk interface
 def ClerkAjaxLongPoll(request):
-    sleep(30)
+    # I think this would ideally be something that's passed from
+    # or otherwise derived by something sent from the client...
+    latest_vote_time = VoteData.objects.order_by('vote_time').reverse()[0].vote_time
+    
     response_data = {}
-    response_data['result'] = 'test success'
-    response_data['message'] = "%s %s" % ('The world has been Hello-ified as of ', str(datetime.datetime.now()))
+    response_data['meeting_changed'] = "0"
+    time_now = datetime.datetime.now()
+    time_to_quit = time_now + datetime.timedelta(seconds=30)
+    while datetime.datetime.now() < time_to_quit:
+        if MeetingState.meeting_has_changed(latest_vote_time):
+            response_data['meeting_changed'] = "1"
+            break
+        sleep(0.4)
     # this will end up coming from the DB or some other coding...
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 

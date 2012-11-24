@@ -64,6 +64,7 @@ urlpatterns = patterns('',
     url(r'^clerk/?$', 'main.views.ClerkInterface', name="ClerkInterface"),
     url(r'^clerk/ajax/motionpull/(?P<motion_id>\w+)/?$', 'main.views.ClerkAjaxMotionPull', name="ClerkAjaxMotionPull"),
 	url(r'^clerk/ajax/currentmotionids/?$', 'main.views.ClerkAjaxCurrentMotionIds', name="ClerkAjaxCurrentMotionIds"),
+    url(r'^clerk/ajax/longpoll/?$', 'main.views.ClerkAjaxLongPoll', name="ClerkAjaxLongPoll"),
     
     url(r'^test/?$', 'main.views.testview'),
     
