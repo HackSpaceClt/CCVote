@@ -101,6 +101,56 @@ function update_motion_info(motion_id) {
             });
     }
 
+function long_poller() {
+    update_debug("entering long_poller");
+    jqaj_longpoll = $.ajax({
+                url: '/voteclient/longpoll',
+                dataType : 'json',
+                cache: false
+                })
+        .done( function(data) {
+            update_debug('Load was performed from long_poller. ' + data.message);
+            if ( current_state != data.new_state ) {
+                update_debug("setting new state from long_poller");
+                set_state(data.new_state);
+                }
+            })
+        // .fail apparently also gets called when you navigate away from the
+        // page...
+        .fail( function() {
+            update_debug("ajax longpoll failed");
+            {% comment %}
+            // to do
+            // add some form of counter here that's checked in the recursive
+            // call so it doesn't just keep looping the call in the event of
+            // the server being down
+            {% endcomment %}
+            })
+        .always( function() { setTimeout(long_poller(), 40); });
+    }
+
+
+// things to run when the document's ready...
+$(document).ready( function() {
+    update_debug("entering document.ready");
+    update_all_motions();
+    //update_debug("getting ready to call long_poller");
+    //long_poller();
+    });
+</script>
+
+<div id="all_motions_container"></div>
+
+<div id="hidden_div" style="position:fixed; top:-20%;"></div>
+
+
+{% if debug == "1" %}
+    <br />
+    <div id=debug_text>poo</div>
+{% endif %}
+<div style="visibility:hidden;">
+    <script LANGUAGE="JavaScript" type="text/javascript">
+
 function update_debug(debug_text) {
 	{% if debug == "1" %}
 		var debug_element = document.getElementById("debug_text");
@@ -119,23 +169,7 @@ function update_debug(debug_text) {
 	{% endif %}
 	}
 
-// things to run when the document's ready...
-$(document).ready( function() {
-    update_debug("entering document.ready");
-    update_all_motions();
-    //update_debug("getting ready to call long_poller");
-    //long_poller();
-    });
-</script>
-
-<div id="all_motions_container" />
-
-<div id="hidden_div" style="position:fixed; top:-20%;"></div>
-
-{% if debug == 1 %}
-    <br />
-    <div id=debug_text />
-{% endif %}
-
+	</script>
+</div>
 
 {% endblock %}
