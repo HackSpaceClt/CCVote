@@ -71,8 +71,6 @@ class UserData(models.Model):
             'Unique user ID number', primary_key=True, db_column='userID')
     user_name = models.CharField(
             'User login name', max_length=20, unique=True, db_column='userName')
-    user_full_name = models.CharField(
-            'User full name', max_length=120, db_column='userFullName')
     user_first_name = models.CharField(
             'User first name', max_length=60, db_column='userFirstName')
     user_last_name = models.CharField(
@@ -131,6 +129,12 @@ class UserData(models.Model):
         sd = dict(USER_STATUS_CHOICES)
         return sd[self.user_status]
     
+    @property
+    def user_full_name(self):
+        # defined as a '@property' method so it doesn't
+        # require the addition of '()' in all the references
+        return u'%s %s' % (self.user_first_name, self.user_last_name)
+
     class Meta:
         db_table = u'userdata'
 
