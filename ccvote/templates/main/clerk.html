@@ -14,10 +14,7 @@
 
 <script type="text/javascript">
 
-var array_for = new Array();
-var array_against = new Array();
-var array_abstain = new Array();
-var array_novote = new Array();
+var array_motions = new Array();
 
 if (document.images) {
     var copybutton_up = new Image();
@@ -49,11 +46,17 @@ function copybutton_released(img_name) {
     document[img_name].src = copybutton_up.src;
     }
 
-function update_all_motions() {
+function update_all_motions(update_votes_only) {
+    // 'update_votes_only' is used to update only the inside of the
+    // motions -- not the title/description/buttons
+    if (!update_votes_only) var update_votes_only = "0";
 	jqaj_localchange = $.ajax({
 		url: '/clerk/ajax/currentmotionids/',
 		dataType : 'json',
-		cache: false
+		cache: false,
+        data:   {
+                array_motions: array_motions
+                }
 		})
 	.done( function(data) {
 		var all_motions_container = $('#all_motions_container');
@@ -62,14 +65,15 @@ function update_all_motions() {
 			' + data.current_motion_ids);
 
 		// Clear the current all_motions_container
-		all_motions_container.html("");
+		// no wait -- don't clear it.....
+        // all_motions_container.html("");
 		for (var i=0;i<current_ids.length;i++) {
 			// Create a div for the motion in the container
 			$('<div />', {
                 id: 'motion_container-' + current_ids[i]
                 }).appendTo(all_motions_container);
 			// Update that new motion/div
-			update_motion_info(current_ids[i]);
+			update_motion_info(current_ids[i], update_votes_only);
 			}
 		})
 	.fail( function() {
@@ -77,7 +81,8 @@ function update_all_motions() {
 		});
     }
 
-function update_motion_info(motion_id) {
+function update_motion_info(motion_id,update_votes_only) {
+    if (!update_votes_only) var update_votes_only = "0";
     jqaj_localchange = $.ajax({
             url: '/clerk/ajax/motionpull/' + motion_id + '/',
             dataType : 'html',
@@ -85,21 +90,27 @@ function update_motion_info(motion_id) {
             data:   {
                     ungroup_other_votes: '{{ ungroup_other_votes }}',
                     copy_button_position: '{{ copy_button_position }}',
-                    copy_just_results: '{{ copy_just_results }}'
+                    copy_just_results: '{{ copy_just_results }}',
+                    update_votes_only: update_votes_only
                     }
             })
         .done( function(data) {
-			var motion_container = $('#motion_container-' + motion_id)
+			var container_motion = $('#motion_container-' + motion_id)
+            var container_votes = $('#copy_div-' + motion_id)
             //update_debug('Ajax load of motion ' + motion_id + ' \
 			//	was performed: <br />"' + data);
             update_debug('Ajax load of motion ' + motion_id + ' \
 				was performed');
-            motion_container.html(data);
-            // reset button image
+
+            if (update_votes_only == "1") container_votes.html(data);
+            else container_motion.html(data);
+
+            // [re]set button image
             copybutton_released('copybutton-' + motion_id)
             })
         .fail( function() {
-            update_debug("update_motion_info ajax call failed");
+            update_debug('update_motion_info ajax call failed \
+                for id ' + motion_id);
             });
     }
 
@@ -117,7 +128,8 @@ function long_poller() {
             update_debug('Load was performed from long_poller. ' + data.meeting_changed);
             if ( data.meeting_changed == "1" ) {
                 update_debug("meeting changed - refreshing");
-                update_all_motions();
+                // call 'update_all_motions', setting "update_votes_only"
+                update_all_motions("1");
                 }
             })
         // .fail apparently also gets called when you navigate away from the
@@ -151,7 +163,7 @@ $(document).ready( function() {
 
 {% if debug == "1" %}
     <br />
-    <div id=debug_text>poo</div>
+    <div id=debug_text />
 {% endif %}
 <div style="visibility:hidden;">
     <script LANGUAGE="JavaScript" type="text/javascript">

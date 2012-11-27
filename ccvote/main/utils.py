@@ -311,6 +311,15 @@ class MeetingState:
         return MotionData.objects.select_related().latest('motion_vote_start')
 
     @classmethod
+    def get_motion_by_id(cls, sent_motion_id):
+        try:
+            local_motion = MotionData.objects.select_related().get(
+                motion_id=sent_motion_id)
+        except ObjectDoesNotExist:
+            return False
+        return local_motion
+
+    @classmethod
     def get_votes_in_motion(cls, sent_motion):
         # returns a list of 'VoteData' objects (and related
         # objects) associated with the passed 'MotionData'
