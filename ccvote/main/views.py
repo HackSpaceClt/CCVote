@@ -329,18 +329,20 @@ def ClerkInterface(request):
 
 # long poll handler for clerk interface
 def ClerkAjaxLongPoll(request):
-    sleep(30)
+    # I think this would ideally be something that's passed from
+    # or otherwise derived by something sent from the client...
+    latest_vote_time = VoteData.objects.order_by('vote_time').reverse()[0].vote_time
+    
     response_data = {}
-    response_data['result'] = 'test success'
-    response_data['message'] = "%s %s" % ('The world has been Hello-ified as of ', str(datetime.datetime.now()))
+    response_data['meeting_changed'] = "0"
+    time_now = datetime.datetime.now()
+    time_to_quit = time_now + datetime.timedelta(seconds=30)
+    while datetime.datetime.now() < time_to_quit:
+        if MeetingState.meeting_has_changed(latest_vote_time):
+            response_data['meeting_changed'] = "1"
+            break
+        sleep(0.3)
     # this will end up coming from the DB or some other coding...
-    return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
-
-# ajax handler for clerk requests
-def ClerkAjax(request):
-    # does nothing yet....
-    incoming_data = request.REQUEST
-    response_data = {}
     return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
 
 # ajax handler for clerk polling of current motions
@@ -357,6 +359,7 @@ def ClerkAjaxCurrentMotionIds(request):
 def ClerkAjaxMotionPull(request, motion_id):
     incoming_data = request.REQUEST
     votes_in_motion = MeetingState.get_votes_by_motion_id(motion_id)
+    local_motion = MeetingState.get_motion_by_id(motion_id)
     page_data = {}
     page_data['request'] = request
     page_data['motion_id'] = motion_id
@@ -367,8 +370,8 @@ def ClerkAjaxMotionPull(request, motion_id):
     page_data['voters_for'] = []
     page_data['voters_against'] = []
     page_data['voters_other'] = []
-    page_data['motion_description'] = votes_in_motion[0].motion_id.motion_description
-    page_data['motion_comment'] = votes_in_motion[0].motion_id.motion_comment
+    page_data['motion_description'] = local_motion.motion_description
+    page_data['motion_comment'] = local_motion.motion_comment
     for vote in filter(lambda x: x.vote == "pro", votes_in_motion):
         page_data['voters_for'].append(vote.user_id.user_full_name)
     for vote in filter(lambda x: x.vote == "con", votes_in_motion):
@@ -397,6 +400,10 @@ def ClerkAjaxMotionPull(request, motion_id):
         page_data['copy_window'] = incoming_data['copy_window']
     except:
         page_data['copy_window'] = "0"
+    try:
+        page_data['render_votes_only'] = incoming_data['update_votes_only']
+    except:
+        page_data['render_votes_only'] = "0"
     auth_template_vars(request, page_data)
     return render_to_response('main/clerkajaxmotionpull.html', page_data, RequestContext(request))
 

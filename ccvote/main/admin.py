@@ -14,11 +14,13 @@ class GroupsAdmin(admin.ModelAdmin):
 
 class UsersAdmin(admin.ModelAdmin):
     fields = ['user_name',
-              'user_full_name',
+              'user_first_name',
+              'user_last_name',
               'user_status',
               'group_id']
     list_display = ('user_name',
-                    'user_full_name',
+                    'user_first_name',
+                    'user_last_name',
                     'user_status',
                     'user_last_login',
                     'user_last_host',
