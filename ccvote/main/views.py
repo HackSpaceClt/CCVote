@@ -12,6 +12,7 @@ from main.models import UserData
 from time import sleep
 from utils import *
 from main.authorization import *
+from operator import itemgetter
 
 #
 # Example view demonstrating template rendering and data access
@@ -25,11 +26,12 @@ def home(request):
     return render_to_response('main/home.html', page_data,
                               RequestContext(request))
 
-def videoOverlay(request):
+'''def videoOverlay(request):
+    incoming_data = request.REQUEST
     videoDisplayData = dict()
+    visibilityAttrs = dict()
     voterNames = dict()
     voteCounts = dict()
-    visibilityAttrs = dict()
     voteClasses = dict()
     voteClass = str()
     noCount = int()
@@ -76,11 +78,99 @@ def videoOverlay(request):
     voteCount = yesCount + noCount
     if voteCount == 0:
         visibilityAttrs.update({'legend':'visibility:hidden;'})
+
     videoDisplayData['voterNames'] = voterNames
     videoDisplayData['voteCounts'] = voteCounts
     videoDisplayData['visibilityAttrs'] = visibilityAttrs
     videoDisplayData['voteClasses'] = voteClasses
     return render_to_response('main/overlay.html', videoDisplayData, RequestContext(request))
+
+    '''
+
+
+def videoOverlay(request):
+    incoming_data = request.REQUEST
+    overlay_display_data = dict()
+    vote_counts = dict()
+    no_count = int()
+    yes_count = int()
+    voter_index = 1
+    user_dict_list = list()
+    vote_dict_list = list()
+    user_dict = dict()
+    vote_dict = dict()
+
+    user_dict_list = MeetingState.get_users_can_vote().order_by('user_last_name').values('user_id', 'user_status', 'user_first_name', 'user_last_name', 'group_id')
+    vote_dict_list = MeetingState.get_current_motion().votedata_set.values('user_id', 'vote')
+    for each in vote_dict_list:
+        vote_dict.update({each['user_id']:each['vote']})
+    for each in user_dict_list:
+        each.update({'vote':vote_dict.get(each['user_id'], '')})
+    for each in user_dict_list:
+        if each['user_status'] == 'logged_in':
+            if each['vote'] != '':
+                each.update({'visibility_attr':''})
+                if each['vote'] == 'con':
+                    each.update({'vote_class':'noVote'})
+                    no_count += 1
+                else:
+                    each.update({'vote_class':'yesVote'})
+                    yes_count += 1
+            else:
+                if 'show' in incoming_data and incoming_data['show']=='logged-in':
+                    each.update({'visibility_attr':''})
+                else:
+                    each.update({'visibility_attr':'visibility:hidden'})
+                each.update({'vote_class':'lackingVote'})
+        else:
+            each.update({'visibility_attr':'visibility:hidden'})
+            each.update({'vote_class':''})
+
+        grouping_1_sort_dict = {'pro':1, 'con':2, '':3}
+        grouping_2_sort_dict = {'pro':1, 'con':3, '':2}
+        if 'grouping' in incoming_data:
+            if incoming_data['grouping']=='1':
+                each.update({'sort_order':grouping_1_sort_dict[each['vote']]})
+            elif incoming_data['grouping']=='2':
+                each.update({'sort_order':grouping_2_sort_dict[each['vote']]})
+        else:
+            if each['group_id'] == 1:
+                overlay_display_data.update({voter_index:each})
+            elif each['group_id'] == 2:
+                overlay_display_data.update({12:each})
+                voter_index -= 1
+            voter_index += 1
+
+    voter_index = 1
+    if 'grouping' in incoming_data:
+        for each in sorted(user_dict_list, key=itemgetter('sort_order')):
+            overlay_display_data.update({voter_index:each})
+            voter_index += 1
+
+    overlay_display_data.update({'yes_count':yes_count, 'no_count':no_count})
+    vote_count = yes_count + no_count
+    if vote_count == 0:
+        overlay_display_data.update({'legend_visibility':'visibility:hidden;'})
+
+
+
+    if Settings.objects.all().count() > 0:
+        Settings.objects.all().delete()
+    if 'grouping' in incoming_data:
+        grouping = incoming_data['grouping']
+    else:
+        grouping = ''
+    if 'show' in incoming_data:
+        show = incoming_data['show']
+    else:
+        show = ''
+    a = Settings(overlay_grouping=grouping, overlay_show=show)
+    a.save()
+
+    return render_to_response('main/overlay.html', overlay_display_data, RequestContext(request))
+
+
+
 
 def videoOverlayJson(request):
     '''
@@ -97,29 +187,68 @@ def videoOverlayJson(request):
     @receiver(main_signals.vote_cast_signal)
     def vote_signal_receiver(sender, **kwargs):
     '''
-    recordsList = []
+
+    settings = Settings.objects.all()[0]
     users_and_votes_dict = dict()
+    users_and_votes_dict_list = list()
+    votes_dict_list = list()
+    vote_dict = dict()
     users_and_votes_dict2 = dict()
     users_and_votes_list = []
-    for each in MeetingState.get_users_can_vote().order_by('user_last_name').values('user_id', 'user_first_name', 'user_last_name', 'user_status'):
-        users_and_votes_dict.update({each['user_id']:{'user_first_name':each['user_first_name'], 'user_last_name':each['user_last_name'], 'user_status':each['user_status']}})
-    # add votes to users_and_votes_dict
-    for each in MeetingState.get_current_motion().votedata_set.values('user_id', 'vote'):
-        users_and_votes_dict[each['user_id']].update({'vote':each['vote']})
+    users_and_votes_dict_list = MeetingState.get_users_can_vote().order_by('user_last_name').values('user_id', 'user_first_name', 'user_last_name', 'user_status', 'group_id')
+    votes_dict_list = MeetingState.get_current_motion().votedata_set.values('user_id', 'vote')
+    # add votes to users_and_votes_dict and add sorting numbers based on grouping settings:
+    grouping_1_sort_dict = {'pro':1, 'con':2, '':3}
+    grouping_2_sort_dict = {'pro':1, 'con':3, '':2}
+    for each in votes_dict_list:
+        vote_dict.update({each['user_id']:each['vote']})
+    for each in users_and_votes_dict_list:
+        vote = vote_dict.get(each['user_id'], '')
+        each.update({'vote':vote,'show':settings.overlay_show})
+        if settings.overlay_grouping == '1':
+            each.update({'sort_order':grouping_1_sort_dict[vote]})
+        elif settings.overlay_grouping == '2':
+            each.update({'sort_order':grouping_2_sort_dict[vote]})
+
+    if settings.overlay_grouping == '':
+        voter_index = 0
+        for each in users_and_votes_dict_list:
+            if each['group_id'] == 1:
+                users_and_votes_dict.update({voter_index:each})
+            elif each['group_id'] == 2:
+                users_and_votes_dict.update({11:each})
+                voter_index -= 1
+            voter_index += 1
+        users_and_votes_dict.update({12:{'show':settings.overlay_show}})
+    else:
+        users_and_votes_dict = sorted(users_and_votes_dict_list, key=itemgetter('sort_order'))
+        users_and_votes_dict.append({'grouping':settings.overlay_grouping, 'show':settings.overlay_show})
+
     # replace user_id key with voter_count key so can create javascript array to loop through on page
-    voter_count = 1
     '''
+    voter_count = 1
+    voter_count = 0
     for each in users_and_votes_dict:
         users_and_votes_dict2[voter_count] = users_and_votes_dict[each]
         voter_count += 1
     '''
-    for each in users_and_votes_dict:
-        users_and_votes_list.append(users_and_votes_dict[each])
-#    return HttpResponse(json.dumps(users_and_votes_dict2))
-#    sleep(3)
-    return HttpResponse(json.dumps(users_and_votes_list))
 
-#    vote_signal_receiver(None)
+#
+#  need to fix this whole thing so that vote displays are changed either via user_id (preferable - maybe add id or class names in html
+#  with user_id in the name or something) or via voter_count number (to do this will need to map voter_count numbers to user_ids somehow)
+#  so that votes are updated based on way they are already displayed, and not resorted everytime
+#
+
+
+#    users_and_votes_dict2.update({'grouping':settings[0].overlay_grouping, 'show':settings[0].overlay_show})
+#    newlist.append({'grouping':settings.overlay_grouping, 'show':settings.overlay_show})
+
+
+#    return HttpResponse(json.dumps(users_and_votes_dict2))
+#    sleep(5)
+
+#    return HttpResponse(json.dumps(users_and_votes_dict2))
+    return HttpResponse(json.dumps(users_and_votes_dict))
     
 
 # Views for vote clients

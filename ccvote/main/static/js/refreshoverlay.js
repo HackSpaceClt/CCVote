@@ -9,19 +9,24 @@ window.log = function(){
   }
 };
 
-var serverErrorFlag = 0;
-function serverErrorHandler(errorType, readyState, status) {
-    alert("readyState is " + readyState + " and status is " + status);
-    throw new Error("readyState is " + readyState + " and status is " + status);
-    if (errorType == 'response') {
-        status = xmlHttp.status;
-        xmlHttp.abort();
-        alert('The server encountered a problem (response status: ' + status + ')');
+var serverCommunicationsStopped = 0;
+function serverErrorHandler(errorType, status, waitUntilTimeout) {
+    if (serverCommunicationsStopped == 0) {
+//        alert("readyState is " + readyState + " and status is " + status);
+//        throw new Error("readyState is " + readyState + " and status is " + status);
+        if (errorType == 'response') {
+            serverCommunicationsStopped = 1;
+            if (status == 0) {
+                alert('Communication with the server has stopped.');
+            }
+            else {
+                alert('The server encountered a problem (response status: ' + status + ').');
+            }
+        }
+        else {
+            alert("The server did not respond within the past " + waitUntilTimeout/1000 + " seconds.");
+        }
     }
-    else if (errorType == 'timeout') {
-        alert("The server did not respond within the timeout period");
-    }
-    serverErrorFlag = 1;
 }
 
 function alertTest() {
@@ -30,7 +35,10 @@ function alertTest() {
     alert(jsonDoc['1']['user_first_name']);
 }
 
+//alert(window.location.search);
+
 function ongoingUpdateDisplay(jsonUrl) {
+    waitUntilTimeout = 4600;
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", jsonUrl, true);
     xmlHttp.onreadystatechange = function() {
@@ -41,22 +49,24 @@ function ongoingUpdateDisplay(jsonUrl) {
                 processResponse(xmlHttp, jsonUrl);
             }
             else {
-                if (serverErrorFlag == 0) {
-                    serverErrorHandler('response', 0, 0);
-                }
+                    serverErrorHandler('response', xmlHttp.status);
+                    xmlHttp.abort();
             }
         }
     }
-    if (serverErrorFlag == 0) {
-        // set timeout for request
-        var xhrTimeout = setTimeout(function(){serverErrorHandler('timeout');}, 4600);
-        // set min time between requests sent
-        var minRequestTime = setTimeout(function(){xmlHttp.send(null);}, 600);
+    if (serverCommunicationsStopped == 0) {
+        // set timeout for request if communications with server up
+        var xhrTimeout = setTimeout(function(){serverErrorHandler('timeout', null, waitUntilTimeout);}, waitUntilTimeout);
     }
+    // set min time between requests sent
+    var minRequestTime = setTimeout(function(){xmlHttp.send(null);}, 400);
 }
 
 function processResponse(xmlHttp, jsonUrl) {
+//    alert(getData);
     jsonDoc = jQuery.parseJSON(xmlHttp.responseText);
+//    alert(jsonDoc[7]['vote'])
+//    alert(jsonDoc[11]['user_status']);
 //    nameClasses = document.getElementsByClassName('name');
     nameClasses = jQuery('.name');
     x=0
@@ -64,7 +74,12 @@ function processResponse(xmlHttp, jsonUrl) {
         while(x<7*(y+1)) {
 //            log(jsonDoc[y]['user_first_name'] + ' ' + jsonDoc[y]['user_last_name'] + ' ' + jsonDoc[y]['user_status']);
             if(jsonDoc[y]['user_status'] == 'logged_in') {
-                nameClasses[x].style.visibility='';
+                if(jsonDoc[y]['show'] == 'logged-in' || jsonDoc[y]['vote'] != '') {
+                    nameClasses[x].style.visibility='';
+                }
+                else {
+                    nameClasses[x].style.visibility='hidden';                
+                }
             }
             else {
                 nameClasses[x].style.visibility='hidden';
@@ -86,6 +101,7 @@ function processResponse(xmlHttp, jsonUrl) {
         }
         else {
             nameClasses[x].className = 'name lackingVote';
+
         }
     }
     yesTotalVoteCountDivs = jQuery('.yesTotalNumber');
@@ -105,4 +121,6 @@ function processResponse(xmlHttp, jsonUrl) {
     ongoingUpdateDisplay(jsonUrl);
 }
 
-window.onload=function(){ongoingUpdateDisplay('overlay.json');};
+jsonUrl = 'overlay.json' + document.location.search
+
+window.onload=function(){ongoingUpdateDisplay(jsonUrl);};

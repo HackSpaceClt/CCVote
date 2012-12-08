@@ -201,4 +201,10 @@ class VoteTemp(models.Model):
     motion_id = models.ForeignKey(MotionData)
     vote = models.CharField('pro/con/abstain', max_length=10)
 
+class Settings(models.Model):
+    overlay_show = models.CharField(
+        'logged-in/voted-only', max_length=10, db_column='overlayShow')
+    overlay_grouping = models.CharField(
+        '1/2', max_length=1, db_column='overlayGrouping')
+
 # vim: set sts=4 sw=4 expandtab:

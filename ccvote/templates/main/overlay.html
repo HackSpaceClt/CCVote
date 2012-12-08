@@ -10,86 +10,92 @@
 <script type="text/javascript" src="/static/js/refreshoverlay.js"></script>
 
 <!-- <script type="text/javascript">
+//    alert(location.href);
+//    alert(location.search());
 </script> -->
-
+<!--
+{% for key,value in 1.items %}
+{{ key }}:{{ value }}
+{% endfor %}
+-->
 <div class="outerContainer">
 <div class="namecolumn">
-<div class="name {{ voteClasses.1 }}" style="{{ visibilityAttrs.1 }}">{{ voterNames.1 }}</div>
+<div class="name {{ 1.vote_class }}" style="{{ 1.visibility_attr }}">{{ 1.user_first_name }} {{ 1.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.1 }}"><div class="no{{i}}">{{ voterNames.1 }}</div></div>
+<div class="name nameOutline" style="{{ 1.visibility_attr }}"><div class="no{{ i }}">{{ 1.user_first_name }} {{ 1.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.2 }}" style="{{ visibilityAttrs.2 }}">{{ voterNames.2 }}</div>
+<div class="name {{ 2.vote_class }}" style="{{ 2.visibility_attr }}">{{ 2.user_first_name }} {{ 2.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.2 }}"><div class="no{{i}}">{{ voterNames.2 }}</div></div>
+<div class="name nameOutline" style="{{ 2.visibility_attr }}"><div class="no{{ i }}">{{ 2.user_first_name }} {{ 2.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.3 }}" style="{{ visibilityAttrs.3 }}">{{ voterNames.3 }}</div>
+<div class="name {{ 3.vote_class }}" style="{{ 3.visibility_attr }}">{{ 3.user_first_name }} {{ 3.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.3 }}"><div class="no{{i}}">{{ voterNames.3 }}</div></div>
+<div class="name nameOutline" style="{{ 3.visibility_attr }}"><div class="no{{ i }}">{{ 3.user_first_name }} {{ 3.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.4 }}" style="{{ visibilityAttrs.4 }}">{{ voterNames.4 }}</div>
+<div class="name {{ 4.vote_class }}" style="{{ 4.visibility_attr }}">{{ 4.user_first_name }} {{ 4.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.4 }}"><div class="no{{i}}">{{ voterNames.4 }}</div></div>
+<div class="name nameOutline" style="{{ 4.visibility_attr }}"><div class="no{{ i }}">{{ 4.user_first_name }} {{ 4.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.5 }}" style="{{ visibilityAttrs.5 }}">{{ voterNames.5 }}</div>
+<div class="name {{ 5.vote_class }}" style="{{ 5.visibility_attr }}">{{ 5.user_first_name }} {{ 5.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.5 }}"><div class="no{{i}}">{{ voterNames.5 }}</div></div>
+<div class="name nameOutline" style="{{ 5.visibility_attr }}"><div class="no{{ i }}">{{ 5.user_first_name }} {{ 5.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.6 }}" style="{{ visibilityAttrs.6 }}">{{ voterNames.6 }}</div>
+<div class="name {{ 6.vote_class }}" style="{{ 6.visibility_attr }}">{{ 6.user_first_name }} {{ 6.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.6 }}"><div class="no{{i}}">{{ voterNames.6 }}</div></div>
+<div class="name nameOutline" style="{{ 6.visibility_attr }}"><div class="no{{ i }}">{{ 6.user_first_name }} {{ 6.user_last_name }}</div></div>
 {% endfor %}
 
 </div>
 
 <div class="namecolumn rightcolumn">
 
-<div class="name {{ voteClasses.7 }}" style="{{ visibilityAttrs.7 }}">{{ voterNames.7 }}</div>
+<div class="name {{ 7.vote_class }}" style="{{ 7.visibility_attr }}">{{ 7.user_first_name }} {{ 7.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.7 }}"><div class="no{{i}}">{{ voterNames.7 }}</div></div>
+<div class="name nameOutline" style="{{ 7.visibility_attr }}"><div class="no{{ i }}">{{ 7.user_first_name }} {{ 7.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.8 }}" style="{{ visibilityAttrs.8 }}">{{ voterNames.8 }}</div>
+<div class="name {{ 8.vote_class }}" style="{{ 8.visibility_attr }}">{{ 8.user_first_name }} {{ 8.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.8 }}"><div class="no{{i}}">{{ voterNames.8 }}</div></div>
+<div class="name nameOutline" style="{{ 8.visibility_attr }}"><div class="no{{ i }}">{{ 8.user_first_name }} {{ 8.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.9 }}" style="{{ visibilityAttrs.9 }}">{{ voterNames.9 }}</div>
+<div class="name {{ 9.vote_class }}" style="{{ 9.visibility_attr }}">{{ 9.user_first_name }} {{ 9.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.9 }}"><div class="no{{i}}">{{ voterNames.9 }}</div></div>
+<div class="name nameOutline" style="{{ 9.visibility_attr }}"><div class="no{{ i }}">{{ 9.user_first_name }} {{ 9.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.10 }}" style="{{ visibilityAttrs.10 }}">{{ voterNames.10 }}</div>
+<div class="name {{ 10.vote_class }}" style="{{ 10.visibility_attr }}">{{ 10.user_first_name }} {{ 10.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.10 }}"><div class="no{{i}}">{{ voterNames.10 }}</div></div>
+<div class="name nameOutline" style="{{ 10.visibility_attr }}"><div class="no{{ i }}">{{ 10.user_first_name }} {{ 10.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.11 }}" style="{{ visibilityAttrs.11 }}">{{ voterNames.11 }}</div>
+<div class="name {{ 11.vote_class }}" style="{{ 11.visibility_attr }}">{{ 11.user_first_name }} {{ 11.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.11 }}"><div class="no{{i}}">{{ voterNames.11 }}</div></div>
+<div class="name nameOutline" style="{{ 11.visibility_attr }}"><div class="no{{ i }}">{{ 11.user_first_name }} {{ 11.user_last_name }}</div></div>
 {% endfor %}
 
-<div class="name {{ voteClasses.12 }}" style="{{ visibilityAttrs.12 }}">{{ voterNames.12 }}</div>
+<div class="name {{ 12.vote_class }}" style="{{ 12.visibility_attr }}">{{ 12.user_first_name }} {{ 12.user_last_name }}</div>
 {% for i in '123456'|make_list %}
-<div class="name nameOutline" style="{{ visibilityAttrs.12 }}"><div class="no{{i}}">{{ voterNames.12 }}</div></div>
+<div class="name nameOutline" style="{{ 12.visibility_attr }}"><div class="no{{ i }}">{{ 12.user_first_name }} {{ 12.user_last_name }}</div></div>
 {% endfor %}
 
 </div>
 
-<div id="legendCont" style="{{visibilityAttrs.legend}}">
+<div id="legendCont" style="{{ legend_visibility }}">
 <div class="legendColumn">
 <div class="ynLegendCont">
 <span class="name yesVote yesLegendBackground roundedCorners">&nbsp;Yes&nbsp;</span>
 <div class="ynLegendCont yesLegendTextCont">
 {% for i in '123456'|make_list %}
-<div class="name nameOutline"><div class="no{{i}} Y{{i}}"><span class="yesTotalNumber">{{voteCounts.yesCount}}</span>&nbsp;&nbsp;Yes</div></div>
+<div class="name nameOutline"><div class="no{{ i }} Y{{ i }}"><span class="yesTotalNumber">{{ yes_count }}</span>&nbsp;&nbsp;Yes</div></div>
 {% endfor %}
 
-<div class="name nameOutline"><div class="legendYesInnerText"><span class="yesTotalNumber">{{voteCounts.yesCount}}</span>&nbsp;&nbsp;Yes&nbsp;</div></div>
+<div class="name nameOutline"><div class="legendYesInnerText"><span class="yesTotalNumber">{{ yes_count }}</span>&nbsp;&nbsp;Yes&nbsp;</div></div>
 </div>
 </div>
 </div>
@@ -99,10 +105,10 @@
 <span class="name noVote noLegendBackground roundedCorners">&nbsp;No&nbsp;</span>
 <div class="ynLegendCont noLegendTextCont">
 {% for i in '123456'|make_list %}
-<div class="name nameOutline"><div class="no{{i}} N{{i}}"><span class="noTotalNumber">{{voteCounts.noCount}}</span>&nbsp;&nbsp;No</div></div>
+<div class="name nameOutline"><div class="no{{ i }} N{{ i }}"><span class="noTotalNumber">{{ no_count }}</span>&nbsp;&nbsp;No</div></div>
 {% endfor %}
 
-<div class="name nameOutline"><div class="legendNoInnerText"><span class="noTotalNumber">{{voteCounts.noCount}}</span>&nbsp;&nbsp;No&nbsp;</div></div>
+<div class="name nameOutline"><div class="legendNoInnerText"><span class="noTotalNumber">{{ no_count }}</span>&nbsp;&nbsp;No&nbsp;</div></div>
 </div>
 </div>
 </div>
