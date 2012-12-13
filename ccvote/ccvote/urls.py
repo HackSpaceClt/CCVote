@@ -23,8 +23,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'main.views.home', name='home'),
-    url(r'^overlay$', 'main.views.videoOverlay', name='videoOverlay'),
-    url(r'^overlay.json$', 'main.views.videoOverlayJson', name='videoOverlayJson'),
 
     # Other examples for guidance:
     # url(r'^articles/(\d{4})/(\d{2})/(\d+)/$', 'news.views.article_detail')
@@ -67,6 +65,13 @@ urlpatterns = patterns('',
     url(r'^clerk/ajax/longpoll/?$', 'main.views.ClerkAjaxLongPoll', name="ClerkAjaxLongPoll"),
     
     url(r'^test/?$', 'main.views.testview'),
+
+    # Overlay
+    url(r'^overlay$', 'main.views.videoOverlay', name='videoOverlay'),
+    url(r'^overlay.json$', 'main.views.videoOverlayJson', name='videoOverlayJson'),
+
+    # Projector
+    url(r'^projector-display$', 'main.views.projector_display', name='projector-display'),
     
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

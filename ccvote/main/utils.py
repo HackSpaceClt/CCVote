@@ -391,11 +391,14 @@ class MeetingState:
         # Return True if the meeting has changed since
         #     the passed time
         # Return False if nothing's changed
-        latest_vote = VoteData.objects.order_by('vote_time').reverse()[0]
-        if latest_vote.vote_time > date_time:
+        latest_votes = VoteData.objects.order_by('vote_time').reverse()
+        if len(latest_votes) > 0:
+            latest_vote_time = latest_votes[0].vote_time
+        else:
+            latest_vote_time = datetime.datetime.fromordinal(1)
+        if latest_vote_time != date_time:
             return True
         else:
             return False
-
-
+      
 # vim: set sts=4 sw=4 expandtab:

@@ -26,68 +26,6 @@ def home(request):
     return render_to_response('main/home.html', page_data,
                               RequestContext(request))
 
-'''def videoOverlay(request):
-    incoming_data = request.REQUEST
-    videoDisplayData = dict()
-    visibilityAttrs = dict()
-    voterNames = dict()
-    voteCounts = dict()
-    voteClasses = dict()
-    voteClass = str()
-    noCount = int()
-    yesCount = int()
-    voter_count = 1
-    user_status_dict = dict()
-    user_vote_dict = dict()
-    user_group_dict = dict()
-    user_first_and_last_name_dict = dict()
-    for each in MeetingState.get_users_can_vote().order_by('user_last_name').values('user_id', 'user_status', 'user_first_name', 'user_last_name', 'group_id'):
-        user_status_dict.update({each['user_id']:each['user_status']})
-        user_group_dict.update({each['user_id']:each['group_id']})
-        user_first_and_last_name_dict.update({each['user_id']:{'user_first_name':each['user_first_name'], 'user_last_name':each['user_last_name']}})
-    for each in MeetingState.get_current_motion().votedata_set.values('user_id', 'vote'):
-        user_vote_dict.update({each['user_id']:each['vote']})
-    for each in user_status_dict:
-        if user_status_dict[each] == 'logged_in':
-            if each in user_vote_dict:
-                visibilityAttr = ''
-                if user_vote_dict[each] == 'con':
-                    voteClass = 'noVote'
-                    noCount += 1
-                else:
-                    voteClass = 'yesVote'
-                    yesCount += 1
-            else:
-                visibilityAttr = ''
-                voteClass = 'lackingVote'
-        else:
-            visibilityAttr = 'visibility:hidden'
-            voteClass = ''
-        if user_group_dict[each] == 1:
-            voterNames.update({voter_count:user_first_and_last_name_dict[each]['user_first_name'] + ' ' + user_first_and_last_name_dict[each]['user_last_name']})
-            visibilityAttrs.update({voter_count:visibilityAttr})
-            voteClasses.update({voter_count:voteClass})
-        elif user_group_dict[each] == 2:
-            voterNames.update({'12':user_first_and_last_name_dict[each]['user_first_name'] + ' ' + user_first_and_last_name_dict[each]['user_last_name']})
-            visibilityAttrs.update({'12':visibilityAttr + ';'})
-            voteClasses.update({'12':voteClass})
-            voter_count -= 1
-        voter_count += 1
-
-    voteCounts.update({'yesCount':yesCount, 'noCount':noCount})
-    voteCount = yesCount + noCount
-    if voteCount == 0:
-        visibilityAttrs.update({'legend':'visibility:hidden;'})
-
-    videoDisplayData['voterNames'] = voterNames
-    videoDisplayData['voteCounts'] = voteCounts
-    videoDisplayData['visibilityAttrs'] = visibilityAttrs
-    videoDisplayData['voteClasses'] = voteClasses
-    return render_to_response('main/overlay.html', videoDisplayData, RequestContext(request))
-
-    '''
-
-
 def videoOverlay(request):
     incoming_data = request.REQUEST
     overlay_display_data = dict()
@@ -153,7 +91,6 @@ def videoOverlay(request):
         overlay_display_data.update({'legend_visibility':'visibility:hidden;'})
 
 
-
     if Settings.objects.all().count() > 0:
         Settings.objects.all().delete()
     if 'grouping' in incoming_data:
@@ -169,25 +106,7 @@ def videoOverlay(request):
 
     return render_to_response('main/overlay.html', overlay_display_data, RequestContext(request))
 
-
-
-
 def videoOverlayJson(request):
-    '''
-    return HttpResponse(str(lastModelChangeTime.objects.values('lastChangeTime').count()))
-    '''
-    '''
-    if lastModelChangeTime.objects.filter(modelName = 'VoteTemp').exists():
-        voteTempModelLastChangeTime = lastModelChangeTime.objects.get(modelName = 'VoteTemp').lastChangeTime
-    else:
-        voteTempModelLastChangeTime = 'empty'
-    return HttpResponse(voteTempModelLastChangeTime)
-    '''
-    '''
-    @receiver(main_signals.vote_cast_signal)
-    def vote_signal_receiver(sender, **kwargs):
-    '''
-
     settings = Settings.objects.all()[0]
     users_and_votes_dict = dict()
     users_and_votes_dict_list = list()
@@ -224,21 +143,11 @@ def videoOverlayJson(request):
         users_and_votes_dict = sorted(users_and_votes_dict_list, key=itemgetter('sort_order'))
         users_and_votes_dict.append({'grouping':settings.overlay_grouping, 'show':settings.overlay_show})
 
-    # replace user_id key with voter_count key so can create javascript array to loop through on page
-    '''
-    voter_count = 1
-    voter_count = 0
-    for each in users_and_votes_dict:
-        users_and_votes_dict2[voter_count] = users_and_votes_dict[each]
-        voter_count += 1
-    '''
-
 #
 #  need to fix this whole thing so that vote displays are changed either via user_id (preferable - maybe add id or class names in html
 #  with user_id in the name or something) or via voter_count number (to do this will need to map voter_count numbers to user_ids somehow)
 #  so that votes are updated based on way they are already displayed, and not resorted everytime
 #
-
 
 #    users_and_votes_dict2.update({'grouping':settings[0].overlay_grouping, 'show':settings[0].overlay_show})
 #    newlist.append({'grouping':settings.overlay_grouping, 'show':settings.overlay_show})
@@ -250,6 +159,10 @@ def videoOverlayJson(request):
 #    return HttpResponse(json.dumps(users_and_votes_dict2))
     return HttpResponse(json.dumps(users_and_votes_dict))
     
+def projector_display(request):
+    page_data = {'this':'that'}
+    return render_to_response('main/projector-display.html', page_data, RequestContext(request))
+
 
 # Views for vote clients
 def VoteClientMinimal(request):
@@ -331,10 +244,13 @@ def ClerkInterface(request):
 def ClerkAjaxLongPoll(request):
     # I think this would ideally be something that's passed from
     # or otherwise derived by something sent from the client...
-    latest_vote_time = VoteData.objects.order_by('vote_time').reverse()[0].vote_time
-    
     response_data = {}
     response_data['meeting_changed'] = "0"
+    latest_vote_times = VoteData.objects.order_by('vote_time').reverse()
+    if len(latest_vote_times) > 0:
+        latest_vote_time = latest_vote_times[0].vote_time
+    else:
+        latest_Vote_time = datetime.datetime.fromordinal(1)
     time_now = datetime.datetime.now()
     time_to_quit = time_now + datetime.timedelta(seconds=30)
     while datetime.datetime.now() < time_to_quit:
