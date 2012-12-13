@@ -103,7 +103,7 @@ ROOT_URLCONF = 'ccvote.urls'
 WSGI_APPLICATION = 'ccvote.wsgi.application'
 
 TEMPLATE_DIRS = (
-    '/Users/online/CCVote/ccvote/templates/'
+    '/home/david/CCVote8BackupCopy/ccvote/templates/'
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
