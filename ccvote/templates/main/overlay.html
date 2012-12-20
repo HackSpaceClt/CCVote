@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-  <title>videoOverlay</title>
+  <title>overlay</title>
   <link rel="stylesheet" href="/static/css/overlay.css">
 </head>
 <body>
@@ -88,10 +88,10 @@
 
 <div id="legendCont" style="{{ legend_visibility }}">
 <div class="legendColumn">
-<div class="ynLegendCont">
+<div class="yesLegendCont">
 <span class="name yesVote yesLegendBackground roundedCorners">&nbsp;Yes&nbsp;</span>
-<div class="ynLegendCont yesLegendTextCont">
-{% for i in '123456'|make_list %}
+<div id="yesLegendTextCont" class="{{ yesLegendTextContAddClass }}">
+{% for i in '12345678'|make_list %}
 <div class="name nameOutline"><div class="no{{ i }} Y{{ i }}"><span class="yesTotalNumber">{{ yes_count }}</span>&nbsp;&nbsp;Yes</div></div>
 {% endfor %}
 
@@ -101,10 +101,10 @@
 </div>
 
 <div class="legendColumn">
-<div class="ynLegendCont">
+<div class="noLegendCont">
 <span class="name noVote noLegendBackground roundedCorners">&nbsp;No&nbsp;</span>
-<div class="ynLegendCont noLegendTextCont">
-{% for i in '123456'|make_list %}
+<div id="noLegendTextCont" class="{{ noLegendTextContAddClass }}">
+{% for i in '12345678'|make_list %}
 <div class="name nameOutline"><div class="no{{ i }} N{{ i }}"><span class="noTotalNumber">{{ no_count }}</span>&nbsp;&nbsp;No</div></div>
 {% endfor %}
 

@@ -50,18 +50,19 @@ def send_random_vote_cast_signals():
         noCount=0
 #        motion_id = MeetingState.get_current_motion().motion_id
         x=1
+        c = random.random()
         while x<12:
             random_user_id = random.randint(1,12)
             if (random_user_id not in random_user_id_list):
                 a = random.random()
-                if a < 0.5 and yesCount < 9:
+                if a < c: # and yesCount < 9:
                     if random_user_id != 12 or a < 0.15:
                         vote = 'pro'
                         yesCount+=1
                         random_user_id_list.append(random_user_id)
                         vote_caster.cast_vote(motion_id, random_user_id, vote)
                         x+=1
-                elif noCount<9:
+                else: #elif noCount<9:
                     if random_user_id != 12 or a < 0.15:
                         vote = 'con'
                         noCount+=1

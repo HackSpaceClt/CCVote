@@ -18,20 +18,35 @@
 //  display:inline-block;
   margin:0px auto;
 }
-.ynLegendCont {
+.yesLegendCont {
   height:0;
   width:0;
   margin:0 auto;
 }
-.yesLegendTextCont {
+.noLegendCont {
+  height:0;
+  width:0;
+  margin:0 auto;
   position:relative;
-  right:114px;
+  left:25px;
+}
+#yesLegendTextCont {
+  position:relative;
+  right:109px;
   top:1px;
 }
-.noLegendTextCont {
+#yesLegendTextCont.yesDoubleDigit {
   position:relative;
-  right:122px;
+  right:128px;
+}
+#noLegendTextCont {
+  position:relative;
+  right:120px;
   top:1px;
+}
+#noLegendTextCont.noDoubleDigit {
+  position:relative;
+  right:139px;
 }
 .yesTotalNumber {
   font-size:115%;
@@ -126,42 +141,14 @@
   left:1px;
   bottom:23px;
 }
-
-/*
-.no1 {
+.no7 {
   position:absolute;
-  left:1px;
-  bottom:22px;
+  bottom:23px;
 }
-.no2 {
+.no8 {
   position:absolute;
-  left:2px;
-  bottom:22px;
+  bottom:23px;
 }
-
-.no3 {
-  position:absolute;
-  left:1px;
-  bottom:21px;
-}
-.no4 {
-  position:absolute;
-  left:-1px;
-  bottom:22px;
-}
-.no5 {
-  position:absolute;
-  left:-1px;
-  bottom:24px;
-}
-.no6 {
-  position:absolute;
-  left:1px;
-  bottom:24px;
-}
-*/
-
-
 .Y1 {
   left:87px;
   z-index:2;
@@ -183,10 +170,19 @@
   z-index:2;
 }
 .Y6 {
-  left:89px;
+  left:88px;
   z-index:2;
 }
-
+.Y7 {
+  left:89px;
+  bottom:22px;
+  z-index:2;
+}
+.Y8 {
+  left:86px;
+  bottom:22px;
+  z-index:2;
+}
 
 .N1 {
   left:95px;
@@ -212,8 +208,14 @@
   left:97px;
   z-index:2;
 }
-
-
+.N7 {
+  left:94px;
+  bottom:23px;
+}
+.N8 {
+  left:96px;
+  bottom:20px;
+}
 .yesVote {
   color:#00e800;
 }
@@ -242,12 +244,14 @@
   background-color:#00e800;
   position:relative;
   z-index:1;
+  left:5px;
 }
 .noLegendBackground {
   border:1px solid black;
   background-color:#ff2020;
   position:relative;
   z-index:1;
+  left:1px;
 }
 /*
 .legendYesInnerText {

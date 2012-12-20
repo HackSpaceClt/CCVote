@@ -17,7 +17,7 @@ function serverErrorHandler(errorType, status, waitUntilTimeout) {
         if (errorType == 'response') {
             serverCommunicationsStopped = 1;
             if (status == 0) {
-                alert('Communication with the server has stopped.');
+                alert('Communication with the server has stopped. (status: ' + status + ')');
             }
             else {
                 alert('The server encountered a problem (response status: ' + status + ').');
@@ -106,6 +106,18 @@ function processResponse(xmlHttp, jsonUrl) {
     }
     yesTotalVoteCountDivs = jQuery('.yesTotalNumber');
     noTotalVoteCountDivs = jQuery('.noTotalNumber');
+    if(yesVoteCount > 9) {
+        document.getElementById('yesLegendTextCont').className = 'yesDoubleDigit';
+    }
+    else {
+        document.getElementById('yesLegendTextCont').className = '';
+    }
+    if(noVoteCount > 9) {
+        document.getElementById('noLegendTextCont').className = 'noDoubleDigit';
+    }
+    else {
+        document.getElementById('noLegendTextCont').className = '';
+    }
     for(x=0; x<yesTotalVoteCountDivs.length; x+=1) {
         yesTotalVoteCountDivs[x].innerHTML = yesVoteCount;
     }
