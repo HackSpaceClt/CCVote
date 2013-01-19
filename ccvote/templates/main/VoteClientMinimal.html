@@ -12,32 +12,30 @@
 <style type="text/css">
 body { background-color: black; }
 .vote_image { 
-    position: relative; 
-    margin: 20px 0 20px 40px; 
-    padding: 5px 0;
-    width: 960px; 
-    height: 640px; 
-    background-repeat: no-repeat; 
+    position: absolute;
+    top: 1%;
+    left:1%;
+    width: 98%;
+    height: 98%;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
     /* border for debug */
     /* border: 1px solid blue; */
     }
 #box_yea { 
-    position: absolute; 
-    top: -1px; 
-    left: -1px; 
-    width: 480px; 
-    height: 640px; 
+    position: relative; 
+    width: 50%;
+    height: 100%;
+    float: left;
     background-color: transparent; 
-    /* border: 1px solid green; */
     }
 #box_nay { 
-    position: absolute; 
-    top: -1px; 
-    left: 479px; 
-    width: 480px; 
-    height: 640px; 
+    position: relative; 
+    width: 50%;
+    height: 100%;
+    float: right;
     background-color: transparent; 
-    /* border: 1px solid red; */
     }
 </style>
 
